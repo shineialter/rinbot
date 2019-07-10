@@ -1,0 +1,25 @@
+{
+
+  "name": "Rin",
+
+  "description": "uwu",
+
+  "version": "1.0",
+
+  "main": "startup.js",
+
+  "scripts": {
+
+    "start": "node startup.js"
+
+  },
+
+  "dependencies": {
+
+    "discord.js": "11.1.0",
+
+    "request": "2.81.0"
+
+  }
+
+}
