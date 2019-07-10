@@ -1,6 +1,6 @@
 const Discord = require("discord.js");
 const client = new Discord.Client();
-const cmds = require("./callcmds.js");  
+const cmds = require("./base/callcmds.js");  
 
 
 client.once("ready", () => {    
