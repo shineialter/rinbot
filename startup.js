@@ -3,7 +3,8 @@ const client = new Discord.Client();
 const cmds = require("./base/callcmds.js");  
 
 
-client.once("ready", () => {    
+client.once("ready", () => {   
+  client.user.setActivity('[?] | owo', { type: 'PLAYING' });
   console.log("Connected and ready to go!");
 });
 
