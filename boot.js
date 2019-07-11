@@ -9,7 +9,7 @@ const bot = new Discord.Client();
 bot.on("ready", async () => {
     console.log(`Connected as ${bot.user.username} in developer mode!`);
     console.log(`${bot.user.username} is online on ${bot.guilds.size} servers!`);
-    bot.user.setActivity(`Studying owo`, { type: `PLAYING` });
+    bot.user.setActivity(`Studying JS owo || [?]`, { type: `PLAYING` });
 });
 
 
@@ -46,5 +46,4 @@ bot.on("message", async message => {
 //
 
 
-bot_secret_token = "NTc4ODU4NDcxNjg0ODMzMjgx.XSXMuw.fjO1ZrnytvGG66uA8SLguCbca9g"
-bot.login(bot_secret_token)
+bot.login(process.env.BOT_TOKEN);
