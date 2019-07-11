@@ -29,7 +29,7 @@ bot.on("message", async message => {
         return
     }
 
-    let prefixes = JSON.parse(fs.readFileSync("./tree/master/data/pref.JSON", "utf8"));
+    let prefixes = JSON.parse(fs.readFileSync("./data/pref.json", "utf8"));
 
     if (!prefixes[message.guild.id]) {
         prefixes[message.guild.id] = {
