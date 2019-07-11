@@ -1,4 +1,6 @@
 const Discord = require("discord.js");
+const repCd = new Set();
+const repCdban = new Set();
 
 module.exports.run = async (bot, message, args) => {
 
@@ -18,11 +20,31 @@ module.exports.run = async (bot, message, args) => {
     return;
     }
 
+    if (args[0] === bot.user.toString()) {
+        message.channel.send("Why are you reporting me?")
+        .then(message => {
+            message.delete(8000)
+        })
+        setTimeout(() => {
+            message.channel.send("I won't accept reports from you then. (You can't report someone for the next **10 minutes**.)")
+            .then(message => {
+                message.delete(5000)
+            })
+        }, 3000)
+
+        repCdban.add(message.author.id);
+        setTimeout(() => {
+            repCdban.delete(message.author.id);
+        }, 100000)
+    return;
+    }
+
     if (!repUser) {
         message.channel.send("Can't find user.")
         .then(message => {
             message.delete(4000)
-        })  
+        })
+    return;
     }
 
     let repReas = args.slice(1).join(" ");
@@ -31,6 +53,7 @@ module.exports.run = async (bot, message, args) => {
         message.channel.send("You can't report someone for no reason!")
     return;
     }
+
 
     let repEmbed = new Discord.RichEmbed()
     .setColor("#f2873f")
@@ -49,10 +72,31 @@ module.exports.run = async (bot, message, args) => {
 
     if (!repChan) {
         message.channel.send("You need to make a **#reports** channel first.")
+    return;
     }
 
-    //message.delete().catch(O_o=>{});
-    message.channel.send({embed:repEmbed})
-    repChan.send({embed:repsendEmbed});
-}
+    if (repCd.has(message.author.id)) {
+        message.channel.send(`${message.author.toString()}, you have to wait **5 minutes** before you can report someone again.`)
+        .then(message => {
+            message.delete(5000)
+        return;
+        })
 
+    } else if (repCdban.has(message.author.id)) {
+        message.channel.send("Report **denied**.")
+        .then(message => {
+            message.delete(5000)
+        return;
+        })
+
+    } else {
+        //message.delete().catch(O_o=>{});
+        message.channel.send({embed:repEmbed})
+        repChan.send({embed:repsendEmbed});
+
+        repCd.add(message.author.id);
+        setTimeout(() => {
+            repCd.delete(message.author.id);
+        }, 300000)
+    }
+}
