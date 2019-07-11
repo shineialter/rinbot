@@ -1,5 +1,5 @@
 const config = require("./config.json");
-const curr = require("./data/curr.json");
+const curr = require("./curr.json");
 const infocmd = require("./commands/info.js");
 const sinfocmd = require("./commands/serverinfo.js");
 const repcmd = require("./commands/report.js");
@@ -15,7 +15,7 @@ const bot = new Discord.Client();
 bot.on("ready", async () => {
     console.log(`Connected as ${bot.user.username} in developer mode!`);
     console.log(`${bot.user.username} is online on ${bot.guilds.size} servers!`);
-    bot.user.setActivity(`Studying owo`, { type: `PLAYING` });
+    bot.user.setActivity(`Studying JS || owo`, { type: `PLAYING` });
 });
 
 
@@ -29,7 +29,7 @@ bot.on("message", async message => {
         return
     }
 
-    let prefixes = JSON.parse(fs.readFileSync(__dirname + "/data/pref.JSON", "utf8"));
+    let prefixes = JSON.parse(fs.readFileSync("./pref.JSON", "utf8"));
 
     if (!prefixes[message.guild.id]) {
         prefixes[message.guild.id] = {
