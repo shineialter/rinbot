@@ -107,5 +107,4 @@ bot.on("message", async message => {
 //
 
 
-bot_secret_token = "NTc4ODU4NDcxNjg0ODMzMjgx.XSXMuw.fjO1ZrnytvGG66uA8SLguCbca9g"
-bot.login(bot_secret_token)
+bot.login(process.env.BOT_TOKEN);
