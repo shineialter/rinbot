@@ -13,6 +13,11 @@ module.exports.run = async (bot, message, args) => {
         return;
     }
 
+    if (args[0] === message.author.toString()) {
+        message.channel.send("You can't report yourself.")
+    return;
+    }
+
     if (!repUser) {
         message.channel.send("Can't find user.")
         .then(message => {
@@ -20,7 +25,7 @@ module.exports.run = async (bot, message, args) => {
         })  
     }
 
-    let repReas = args.slice(1).join(" ");
+    let repReas = args[1].slice(1).join(" ");
 
     if (!repReas) {
         message.channel.send("You can't report someone for no reason!")
@@ -46,7 +51,8 @@ module.exports.run = async (bot, message, args) => {
         message.channel.send("You need to make a **#reports** channel first.")
     }
 
-    message.delete().catch(O_o=>{});
+    //message.delete().catch(O_o=>{});
     message.channel.send({embed:repEmbed})
     repChan.send({embed:repsendEmbed});
+}
 }
