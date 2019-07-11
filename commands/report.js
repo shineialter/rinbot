@@ -10,13 +10,18 @@ module.exports.run = async (bot, message, args) => {
     }
 
     let repUser = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
-
+    
     if (!args[0]) {
         return;
     }
 
     if (args[0] === message.author.toString()) {
         message.channel.send("You can't report yourself.")
+    return;
+    }
+
+    if (args[0] === "<@235047791431385088>") {
+        message.channel.send("Hey, that's my creator!!")
     return;
     }
 
