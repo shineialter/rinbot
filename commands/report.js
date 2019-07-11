@@ -25,7 +25,7 @@ module.exports.run = async (bot, message, args) => {
         })  
     }
 
-    let repReas = args[1].slice(1).join(" ");
+    let repReas = args.slice(1).join(" ");
 
     if (!repReas) {
         message.channel.send("You can't report someone for no reason!")
