@@ -42,7 +42,7 @@ bot.on("message", async message => {
 
     if (!curr[message.author.id]) {
         curr[message.author.id] = {
-            money: 0
+            curr: 0
         };
     }
 
