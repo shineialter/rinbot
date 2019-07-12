@@ -1,5 +1,6 @@
 const config = require("./config.json");
 const curr = require("./data/curr.json");
+const exp = require("./data/exp.json");
 const infocmd = require("./commands/info.js");
 const sinfocmd = require("./commands/serverinfo.js");
 const repcmd = require("./commands/report.js");
@@ -7,7 +8,9 @@ const kcmd = require("./commands/kick.js");
 const bcmd = require("./commands/ban.js");
 const prcmd = require("./commands/prefix.js");
 const currcmd = require("./commands/currency.js");
+const stcmd = require("./commands/stats.js");
 const Discord = require("discord.js");
+const jimp = require("jimp")
 const fs = require("fs");
 const bot = new Discord.Client();
 
@@ -29,7 +32,7 @@ bot.on("message", async message => {
         return
     }
 
-    let prefixes = JSON.parse(fs.readFileSync("./data/pref.json", "utf8"));
+    let prefixes = JSON.parse(fs.readFileSync("./data/pref.JSON", "utf8"));
 
     if (!prefixes[message.guild.id]) {
         prefixes[message.guild.id] = {
@@ -63,6 +66,40 @@ bot.on("message", async message => {
     message.channel.send({embed:currEmb}).then(message => {message.delete(5000)}); */
 
     }
+
+    let expAdd = Math.floor(Math.random() * 7) + 8;
+    console.log(expAdd);
+
+    if (!exp[message.author.id]) {
+        exp[message.author.id] = {
+            exp: 0,
+            lvl: 1
+        };
+    }
+
+    let curexp = exp[message.author.id].exp;
+    let curLvl = exp[message.author.id].lvl;
+    let nxtLvl = exp[message.author.id].lvl * 82;
+
+    exp[message.author.id].exp = curexp + expAdd;
+
+    if (nxtLvl <= exp[message.author.id].exp) {
+        exp[message.author.id].lvl = curLvl + 1;
+
+        let statsIcon = message.author.avatarURL
+        let statsEmb = new Discord.RichEmbed()
+        .setAuthor(`${message.author.username}`, `${statsIcon}`)
+        .setColor("#f2873f")
+        .addField(`Level Up!`, `You are now level ${curLvl + 1}`);
+
+        message.channel.send({embed:statsEmb});
+    }
+
+    fs.writeFile("./data/exp.json", JSON.stringify(exp), (err) => {
+        if(err) console.log(err)
+    });
+
+    console.log(`ur level ${exp[message.author.id].lvl}`);
 
     let prefix = prefixes[message.guild.id].prefixes;
     let msgArr = message.content.split(" ");
@@ -101,10 +138,15 @@ bot.on("message", async message => {
     if (command === `${prefix}pay`) {
         currcmd.giveCmd(bot, message, args)
     }
+
+    if (command === `${prefix}stats`) {
+        stcmd.run(bot, message, args)
+    }
 });
 
 
 //
 
 
-bot.login(process.env.BOT_TOKEN);
+bot_secret_token = "NTc4ODU4NDcxNjg0ODMzMjgx.XSXMuw.fjO1ZrnytvGG66uA8SLguCbca9g"
+bot.login(bot_secret_token)
