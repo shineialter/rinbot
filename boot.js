@@ -68,7 +68,6 @@ bot.on("message", async message => {
     }
 
     let expAdd = Math.floor(Math.random() * 7) + 8;
-    console.log(expAdd);
 
     if (!exp[message.author.id]) {
         exp[message.author.id] = {
@@ -99,7 +98,7 @@ bot.on("message", async message => {
         if(err) console.log(err)
     });
 
-    console.log(`ur level ${exp[message.author.id].lvl}`);
+    console.log(`${message.author.username} leveled up to level ${exp[message.author.id].lvl}`);
 
     let prefix = prefixes[message.guild.id].prefixes;
     let msgArr = message.content.split(" ");
