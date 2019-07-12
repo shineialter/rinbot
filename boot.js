@@ -92,13 +92,12 @@ bot.on("message", async message => {
         .addField(`Level Up!`, `You are now level ${curLvl + 1}`);
 
         message.channel.send({embed:statsEmb});
+        console.log(`${message.author.username} leveled up to level ${exp[message.author.id].lvl}`);
     }
 
     fs.writeFile("./data/exp.json", JSON.stringify(exp), (err) => {
         if(err) console.log(err)
     });
-
-    console.log(`${message.author.username} leveled up to level ${exp[message.author.id].lvl}`);
 
     let prefix = prefixes[message.guild.id].prefixes;
     let msgArr = message.content.split(" ");
