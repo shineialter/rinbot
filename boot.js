@@ -16,7 +16,7 @@ const bot = new Discord.Client();
 
 
 bot.on("ready", async () => {
-    console.log(`Connected as ${bot.user.username} in developer mode!`);
+    console.log(`${bot.user.username} is now online!`);
     console.log(`${bot.user.username} is online on ${bot.guilds.size} servers!`);
     bot.user.setActivity(`Studying JS || owo`, { type: `PLAYING` });
 });
