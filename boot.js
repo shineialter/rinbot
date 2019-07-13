@@ -110,8 +110,7 @@ bot.on("message", async message => {
         console.log(message.author.username + " has found ¥" + balGet);
 
         Balance.findOne({
-            currId: message.author.id,
-            guildId: message.guild.id
+            currId: message.author.id
         }, (err, res) => {
 
             if (err) throw err;
@@ -119,7 +118,6 @@ bot.on("message", async message => {
 
                 const newBalance = new Balance({
                     currId: message.author.id,
-                    guildId: message.guild.id,
                     balance: balGet
                 })
             
@@ -142,7 +140,6 @@ bot.on("message", async message => {
 
             const newExpStats = new Exp({
                 currId: message.author.id,
-                guildId: message.guild.id,
                 exp: expGet,
                 level: 1
             })
