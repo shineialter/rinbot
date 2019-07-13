@@ -94,7 +94,7 @@ module.exports.run = async (bot, message, args) => {
 
                                             let announceEmb = new Discord.RichEmbed()
                                                 .setColor("#f2873f")
-                                                .addField(`${message.author.toString()} just pulled a **SSR**!!!`)
+                                                .addField("GachaPon", `${message.author.toString()} just pulled a **SSR**!!!`)
                                                 .setFooter(`Script helped by CronixYT`)
 
                                             message.channel.send({embed:announceEmb});
