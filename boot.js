@@ -16,7 +16,7 @@ const mongoose = require("mongoose");
 const bot = new Discord.Client();
 
 
-mongoose.connect(`mongodb://shinei:Parousia207@rinbot-shard-00-00-6iqrw.mongodb.net:27017,rinbot-shard-00-01-6iqrw.mongodb.net:27017,rinbot-shard-00-02-6iqrw.mongodb.net:27017/test?ssl=true&replicaSet=rinbot-shard-0&authSource=admin&retryWrites=true&w=majority`, {
+mongoose.connect(`mongodb://${MONGODB_USER}:${MONGODB_PW}@rinbot-shard-00-00-6iqrw.mongodb.net:27017,rinbot-shard-00-01-6iqrw.mongodb.net:27017,rinbot-shard-00-02-6iqrw.mongodb.net:27017/test?ssl=true&replicaSet=rinbot-shard-0&authSource=admin&retryWrites=true&w=majority`, {
     useCreateIndex: true, useNewUrlParser: true})
 
 mongoose.connection.on("open", () => {
