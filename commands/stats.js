@@ -15,12 +15,10 @@ module.exports.run = async (bot, message, args) => {
             if (!result) {
                 const newBalance = new Balance({
                     currId: message.author.id,
-                    guildId: message.guild.id,
                     balance: 0
                 });
                 const newExpLevel = new Exp({
                     currId: message.author.id,
-                    guildId: message.guild.id,
                     exp: 0,
                     level: 1
                 });
