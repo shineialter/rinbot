@@ -9,6 +9,8 @@
     "discord.js": "^11.5.1",
     "dotenv": "^7.0.0",
     "jimp": "^0.6.4",
+    "mongoose": "^5.6.4",
+    "moongoose": "0.0.5",
     "sequelize": "^5.8.6",
     "sqlite3": "^4.0.8",
     "winston": "^3.2.1"
