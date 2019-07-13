@@ -20,11 +20,11 @@ const mongoose = require("mongoose");
 const bot = new Discord.Client();
 
 
-mongoose.connect(`mongodb://shinei:Parousia207@rinbot-shard-00-00-6iqrw.mongodb.net:27017,rinbot-shard-00-01-6iqrw.mongodb.net:27017,rinbot-shard-00-02-6iqrw.mongodb.net:27017/test?ssl=true&replicaSet=rinbot-shard-0&authSource=admin&retryWrites=true&w=majority`, {
+mongoose.connect(`mongodb://${process.env.MONGODB_USER}:${process.env.MONGODB_PW}@rinbot-shard-00-00-6iqrw.mongodb.net:27017,rinbot-shard-00-01-6iqrw.mongodb.net:27017,rinbot-shard-00-02-6iqrw.mongodb.net:27017/test?ssl=true&replicaSet=rinbot-shard-0&authSource=admin&retryWrites=true&w=majority`, {
     useCreateIndex: true, useNewUrlParser: true})
 
 mongoose.connection.on("open", () => {
-    console.log("Connected to rinbot's database!")
+    console.log("Connected to rinbot's mongoose database!")
 }).on("error", err => {
     console.log(err)
 })
@@ -35,8 +35,8 @@ const Exp = require("./models/exps.js");
 
 
 bot.on("ready", async () => {
-    console.log(`Connected as ${bot.user.username} in developer mode!`);
-    console.log(`${bot.user.username} is online on ${bot.guilds.size} servers!`);
+    console.log(`${bot.user.username} is ready and online!`);
+    console.log(`Currently ${bot.user.username} is online on ${bot.guilds.size} servers!`);
     bot.user.setActivity(`Studying JS || owo`, { type: `PLAYING` });
 });
 
@@ -197,5 +197,4 @@ bot.on("message", async message => {
 //
 
 
-bot_secret_token = "NTc4ODU4NDcxNjg0ODMzMjgx.XSXMuw.fjO1ZrnytvGG66uA8SLguCbca9g"
-bot.login(bot_secret_token)
+bot.login(process.env.BOT_TOKEN);
