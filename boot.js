@@ -20,7 +20,7 @@ mongoose.connect(`mongodb://${process.env.MONGODB_USER}:${process.env.MONGODB_PW
     useCreateIndex: true, useNewUrlParser: true})
 
 mongoose.connection.on("open", () => {
-    console.log("Connected to rinbot's database!")
+    console.log("Connected to rinbot's mongoose database!")
 }).on("error", err => {
     console.log(err)
 })
@@ -31,8 +31,8 @@ const Exp = require("./models/exps.js");
 
 
 bot.on("ready", async () => {
-    console.log(`Connected as ${bot.user.username} in developer mode!`);
-    console.log(`${bot.user.username} is online on ${bot.guilds.size} servers!`);
+    console.log(`${bot.user.username} is ready and online!`);
+    console.log(`Currently ${bot.user.username} is online on ${bot.guilds.size} servers!`);
     bot.user.setActivity(`Studying JS || owo`, { type: `PLAYING` });
 });
 
@@ -172,7 +172,6 @@ bot.on("message", async message => {
                     res.exp = curntExp - resetExp
                     res.save().catch(err => console.log(err));
                 } else {
-                    console.log("Your exp is " + res.exp)
                     res.save().catch(err => console.log(err));
                 }
             }
