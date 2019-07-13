@@ -85,7 +85,7 @@ module.exports.run = async (bot, message, args) => {
                                             .setColor("#f2873f")
                                             .addField("GachaPon", `**${result[0].name}**`)
                                             .setImage(img)
-                                            .setFooter(`Script helped by CronixYT`)
+                                            .setFooter(`Script helped by Cronix#0363`)
         
                                         message.author.send({ embed: getSSREmb });
         
@@ -95,7 +95,7 @@ module.exports.run = async (bot, message, args) => {
                                             let announceEmb = new Discord.RichEmbed()
                                                 .setColor("#f2873f")
                                                 .addField("GachaPon", `${message.author.toString()} just pulled a **SSR**!!!`)
-                                                .setFooter(`Script helped by CronixYT`)
+                                                .setFooter(`Script helped by Cronix#0363`)
 
                                             message.channel.send({embed:announceEmb});
 
