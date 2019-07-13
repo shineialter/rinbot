@@ -1,6 +1,4 @@
 const config = require("./config.json");
-const curr = require("./data/curr.json");
-const exp = require("./data/exp.json");
 const infocmd = require("./commands/info.js");
 const sinfocmd = require("./commands/serverinfo.js");
 const repcmd = require("./commands/report.js");
@@ -9,28 +7,37 @@ const bcmd = require("./commands/ban.js");
 const prcmd = require("./commands/prefix.js");
 const currcmd = require("./commands/currency.js");
 const stcmd = require("./commands/stats.js");
+
 const Discord = require("discord.js");
 const jimp = require("jimp")
 const fs = require("fs");
+const mongoose = require("mongoose");
+
 const bot = new Discord.Client();
 
 
+mongoose.connect(`mongodb://shinei:Parousia207@rinbot-shard-00-00-6iqrw.mongodb.net:27017,rinbot-shard-00-01-6iqrw.mongodb.net:27017,rinbot-shard-00-02-6iqrw.mongodb.net:27017/test?ssl=true&replicaSet=rinbot-shard-0&authSource=admin&retryWrites=true&w=majority`, {
+    useCreateIndex: true, useNewUrlParser: true})
+
+mongoose.connection.on("open", () => {
+    console.log("Connected to rinbot's database!")
+}).on("error", err => {
+    console.log(err)
+})
+
+
+const Balance = require("./models/balances.js")
+const Exp = require("./models/exps.js");
+
+
 bot.on("ready", async () => {
-    console.log(`${bot.user.username} is now online!`);
+    console.log(`Connected as ${bot.user.username} in developer mode!`);
     console.log(`${bot.user.username} is online on ${bot.guilds.size} servers!`);
     bot.user.setActivity(`Studying JS || owo`, { type: `PLAYING` });
 });
 
 
 bot.on("message", async message => {
-
-    if (message.author == bot.user) {
-        return
-    }
-
-    if (message.channel.type === "dm") {
-        return
-    }
 
     let prefixes = JSON.parse(fs.readFileSync("./data/pref.json", "utf8"));
 
@@ -40,110 +47,144 @@ bot.on("message", async message => {
         };
     }
 
-    if (!curr[message.author.id]) {
-        curr[message.author.id] = {
-            curr: 0
-        };
-    }
-
-    let currAmt = Math.floor(Math.random() * 5) + 1;
-    let baseAmt = Math.floor(Math.random() * 5) + 1;
-
-    if (currAmt === baseAmt) {
-        curr[message.author.id] = {
-            curr: curr[message.author.id].curr + currAmt
-        };
-
-    fs.writeFile("./data/curr.json", JSON.stringify(curr), (err) => {
-        if (err) console.log(err)
-    });
-
-    /* let currEmb = new Discord.RichEmbed()
-    .setAuthor(message.author.username)
-    .setColor("#f2873f")
-    .addField("Get Money", `¥${currAmt} added!`);
-
-    message.channel.send({embed:currEmb}).then(message => {message.delete(5000)}); */
-
-    }
-
-    let expAdd = Math.floor(Math.random() * 7) + 8;
-
-    if (!exp[message.author.id]) {
-        exp[message.author.id] = {
-            exp: 0,
-            lvl: 1
-        };
-    }
-
-    let curexp = exp[message.author.id].exp;
-    let curLvl = exp[message.author.id].lvl;
-    let nxtLvl = exp[message.author.id].lvl * 82;
-
-    exp[message.author.id].exp = curexp + expAdd;
-
-    if (nxtLvl <= exp[message.author.id].exp) {
-        exp[message.author.id].lvl = curLvl + 1;
-
-        let statsIcon = message.author.avatarURL
-        let statsEmb = new Discord.RichEmbed()
-        .setAuthor(`${message.author.username}`, `${statsIcon}`)
-        .setColor("#f2873f")
-        .addField(`Level Up!`, `You are now level ${curLvl + 1}`);
-
-        message.channel.send({embed:statsEmb});
-        console.log(`${message.author.username} leveled up to level ${exp[message.author.id].lvl}`);
-    }
-
-    fs.writeFile("./data/exp.json", JSON.stringify(exp), (err) => {
-        if(err) console.log(err)
-    });
-
     let prefix = prefixes[message.guild.id].prefixes;
-    let msgArr = message.content.split(" ");
-    let command = msgArr[0];
-    let args = msgArr.slice(1);
+    let args = message.content.slice(prefix.length).split(/ +/);
+    let command = args.shift().toLowerCase();
+
+    if (message.author == bot.user) {
+        return
+    } 
     
-
-    if (command === `${prefix}info`) {
-        infocmd.run(bot, message, args);
+    else if (message.channel.type === "dm") {
+        return
     }
 
-    if (command === `${prefix}serverinfo`) {
-        sinfocmd.run(bot, message, args);
+    else if (message.content.startsWith(prefix)) {
+
+        if (command === `info`) {
+            infocmd.run(bot, message, args);
+        }
+    
+        if (command === `serverinfo`) {
+            sinfocmd.run(bot, message, args);
+        }
+    
+        if (command === `report`) {
+            repcmd.run(bot, message, args);
+        }
+    
+        if (command === `kick`) {
+            kcmd.run(bot, message, args);
+        }
+    
+        if (command === `ban`) {
+            bcmd.run(bot, message, args)
+        }
+    
+        if (command === `prefix`) {
+            prcmd.run(bot, message, args)
+        }
+    
+        if (command === `balance`) {
+            currcmd.run(bot, message, args)
+        }
+    
+        if (command === `pay`) {
+            currcmd.run(bot, message, args)
+        }
+    
+        if (command === `stats`) {
+            stcmd.run(bot, message, args)
+        }
     }
 
-    if (command === `${prefix}report`) {
-        repcmd.run(bot, message, args);
+    else {
+
+    let rngGet = Math.floor(Math.random() * 10) + 1;
+    let rngGetbal = Math.floor(Math.random() * 10) + 1;
+
+    if (rngGet === rngGetbal) {
+
+        let balGet = Math.ceil(Math.random() * 50);
+
+        console.log(message.author.username + " has found ¥" + balGet);
+
+        Balance.findOne({
+            currId: message.author.id,
+            guildId: message.guild.id
+        }, (err, res) => {
+
+            if (err) throw err;
+            if (!res) {
+
+                const newBalance = new Balance({
+                    currId: message.author.id,
+                    guildId: message.guild.id,
+                    balance: balGet
+                })
+            
+                newBalance.save().catch(err => console.log(err));
+            } else {
+                res.balance = res.balance + balGet;
+                res.save().catch(err => console.log(err));
+            }
+        })
     }
 
-    if (command === `${prefix}kick`) {
-        kcmd.run(bot, message, args);
+
+    let expGet = Math.ceil(Math.random() * 17);
+
+    Exp.findOne({
+        currId: message.author.id
+    }, (err, res) => {
+        if (err) throw err;
+        if (!res) {
+
+            const newExpStats = new Exp({
+                currId: message.author.id,
+                guildId: message.guild.id,
+                exp: expGet,
+                level: 1
+            })
+
+            newExpStats.save().catch(err => console.log(err));
+        } else {
+            let curntExp = res.exp;
+            let curntLvl = res.level;
+            let nextLvl = res.level * 53;
+
+            res.exp = curntExp + expGet;
+
+                if (nextLvl <= res.exp) {
+
+                    res.level = curntLvl + 1;
+
+                    let prevLvl = res.level - 1;
+                    let resetExp = prevLvl * 53;
+
+                    let lvlUpIcon = message.author.avatarURL
+                    let lvlUpEmb = new Discord.RichEmbed()
+                        .setAuthor(`${message.author.username}`, `${lvlUpIcon}`)
+                        .setColor("#f2873f")
+                        .addField("Level Up!", `You are now level **${curntLvl + 1}**`);
+
+                    message.channel.send({embed:lvlUpEmb})
+                    res.exp = curntExp - resetExp
+                    res.save().catch(err => console.log(err));
+                } else {
+                    console.log("Your exp is " + res.exp)
+                    res.save().catch(err => console.log(err));
+                }
+            }
+        })
     }
 
-    if (command === `${prefix}ban`) {
-        bcmd.run(bot, message, args)
-    }
-
-    if (command === `${prefix}prefix`) {
-        prcmd.run(bot, message, args)
-    }
-
-    if (command === `${prefix}balance`) {
-        currcmd.balanceCmd(bot, message, args)
-    }
-
-    if (command === `${prefix}pay`) {
-        currcmd.giveCmd(bot, message, args)
-    }
-
-    if (command === `${prefix}stats`) {
-        stcmd.run(bot, message, args)
-    }
+    
 });
 
 
 //
 
 
-bot.login(process.env.BOT_TOKEN);
+bot_secret_token = "NTc4ODU4NDcxNjg0ODMzMjgx.XSXMuw.fjO1ZrnytvGG66uA8SLguCbca9g"
+bot.login(bot_secret_token)

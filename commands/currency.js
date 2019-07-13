@@ -1,58 +1,86 @@
 const Discord = require("discord.js");
-const curr = require("../data/curr.json");
-const fs = require("fs");
+const Balance = require("../models/balances.js");
+const fBalance = require("./utils/fBalance.js");
 
-module.exports = {
-    balanceCmd: async (bot, message, args) => {
+module.exports.run = async (bot, message, args) => {
 
-        if (!curr[message.author.id]) {
-            curr[message.author.id] = {
-                curr:   0
-            };
-        }
+    let getUser = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
 
-        if (args[0] == message.author.toString() || !args[0]) {
+    if (args[0] == message.author.toString() || !args[0]) {
 
-            let currUser = curr[message.author.id].curr;
+        fBalance.myself(Balance, message, (result) => {
+            if (!result) {
+                const newBalance = new Balance({
+                    currId: message.author.id,
+                    guildId: message.guild.id,
+                    balance: 0
+                });
+                newBalance.save().catch(err => console.log(err));
+            } else {
+            let balIcon = message.author.avatarURL
+            let balEmbed = new Discord.RichEmbed()
+                .setAuthor(`${message.author.username}`, `${balIcon}`)
+                .setColor("#f2873f")
+                .addField("Your Balance", `¥${result.balance}`);
 
-            let currUEmb = new Discord.RichEmbed()
-            .setAuthor(message.author.username)
-            .setColor("#f2873f")
-            .addField("Your Balance", `¥${currUser}`);
+                message.channel.send({embed:balEmbed});
+            }
+        })
+    } 
+    
+    else if (!getUser) {
 
-            message.channel.send({embed:currUEmb});
-
-        return;
-        }
-
-        let balUser = message.guild.member(message.mentions.users.first()) || message.guild.members.get(args[0]);
-
-        if (!balUser) {
-            message.channel.send("Can't find user.")
-            .then(message => {
-                message.delete(4000)
-            })
-        return;
-        }
-
-        if (!curr[balUser.id]) {
-            curr[balUser.id] = {
-                curr: 0
-            };
-        }
-
-        let currbUser = curr[balUser.id].curr;
-
-        let currbEmb = new Discord.RichEmbed()
-        .setAuthor(message.author.username)
+        let notUserEmb = new Discord.RichEmbed()
         .setColor("#f2873f")
-        .addField("Their Balance", `${balUser}'s balance: ¥${currbUser}`)
+        .addField("Error!", `Can't find that user.`);
 
-        message.channel.send({embed:currbEmb});
-    },
+        message.delete(4000).catch(O_o=>{});
+        message.channel.send({embed:notUserEmb}).then(message => {message.delete(4000)});
+    }
+
+    else if (getUser) {
+        fBalance.otherUser(Balance, getUser, (result) => {
+            if (!result) {
+                const newTheirBalance = new Balance({
+                    currId: getUser.id,
+                    guildId: getUser.guild.id,
+                    balance: 0
+                });
+                newTheirBalance.save().catch(err => console.log(err));
+            } else {
+            let balTheirIcon = getUser.user.avatarURL
+            let balTheirEmbed = new Discord.RichEmbed()
+                .setAuthor(`${getUser.user.username}`, `${balTheirIcon}`)
+                .setColor("#f2873f")
+                .addField(`${getUser.user.username}'s Balance`, `¥${result.balance}`);
+
+                message.channel.send({embed:balTheirEmbed});
+            }
+        })
+    }
+}
 
 
-    giveCmd: async (bot, message, args) => {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /* giveCmd: async (bot, message, args) => {
         
         if (!curr[message.author.id]) {
             message.reply("You don't have any money!")
@@ -127,5 +155,4 @@ module.exports = {
                 if(err) console.log(err)
             });
         }
-    }
-}
+    } */
