@@ -1,4 +1,5 @@
 const config = require("./config.json");
+
 const infocmd = require("./commands/info.js");
 const sinfocmd = require("./commands/serverinfo.js");
 const repcmd = require("./commands/report.js");
@@ -7,6 +8,9 @@ const bcmd = require("./commands/ban.js");
 const prcmd = require("./commands/prefix.js");
 const currcmd = require("./commands/currency.js");
 const stcmd = require("./commands/stats.js");
+const imasgchcmd = require("./commands/imasgachasim.js");
+
+const admsetbal = require("./adm_cmd/balManager.js");
 
 const Discord = require("discord.js");
 const jimp = require("jimp")
@@ -16,11 +20,11 @@ const mongoose = require("mongoose");
 const bot = new Discord.Client();
 
 
-mongoose.connect(`mongodb://${process.env.MONGODB_USER}:${process.env.MONGODB_PW}@rinbot-shard-00-00-6iqrw.mongodb.net:27017,rinbot-shard-00-01-6iqrw.mongodb.net:27017,rinbot-shard-00-02-6iqrw.mongodb.net:27017/test?ssl=true&replicaSet=rinbot-shard-0&authSource=admin&retryWrites=true&w=majority`, {
+mongoose.connect(`mongodb://shinei:Parousia207@rinbot-shard-00-00-6iqrw.mongodb.net:27017,rinbot-shard-00-01-6iqrw.mongodb.net:27017,rinbot-shard-00-02-6iqrw.mongodb.net:27017/test?ssl=true&replicaSet=rinbot-shard-0&authSource=admin&retryWrites=true&w=majority`, {
     useCreateIndex: true, useNewUrlParser: true})
 
 mongoose.connection.on("open", () => {
-    console.log("Connected to rinbot's mongoose database!")
+    console.log("Connected to rinbot's database!")
 }).on("error", err => {
     console.log(err)
 })
@@ -31,28 +35,28 @@ const Exp = require("./models/exps.js");
 
 
 bot.on("ready", async () => {
-    console.log(`${bot.user.username} is ready and online!`);
-    console.log(`Currently ${bot.user.username} is online on ${bot.guilds.size} servers!`);
+    console.log(`Connected as ${bot.user.username} in developer mode!`);
+    console.log(`${bot.user.username} is online on ${bot.guilds.size} servers!`);
     bot.user.setActivity(`Studying JS || owo`, { type: `PLAYING` });
 });
 
 
 bot.on("message", async message => {
 
-    let prefixes = JSON.parse(fs.readFileSync("./data/pref.json", "utf8"));
+    //let prefixes = JSON.parse(fs.readFileSync("./data/pref.json", "utf8"));
 
-    if (!prefixes[message.guild.id]) {
-        prefixes[message.guild.id] = {
-            prefixes: config.prefix
-        };
-    }
+    //if (!prefixes[message.guild.id]) {
+    //    prefixes[message.guild.id] = {
+    //        prefixes: config.prefix
+    //    };
+   // }
 
-    let prefix = prefixes[message.guild.id].prefixes;
+    let prefix = config.prefix;
     let args = message.content.slice(prefix.length).split(/ +/);
     let command = args.shift().toLowerCase();
 
     if (message.author == bot.user || message.author.bot) {
-        return
+        return;
     } 
     
     else if (message.channel.type === "dm") {
@@ -95,6 +99,16 @@ bot.on("message", async message => {
     
         if (command === `stats`) {
             stcmd.run(bot, message, args)
+        }
+
+        if (command === `imasgacha`) {
+            imasgchcmd.run(bot, message, args)
+        }
+        
+        // --- //
+
+        if (command === `setbal`) {
+            admsetbal.run(bot, message, args)
         }
     }
 
@@ -169,6 +183,7 @@ bot.on("message", async message => {
                     res.exp = curntExp - resetExp
                     res.save().catch(err => console.log(err));
                 } else {
+                    console.log("Your exp is " + res.exp)
                     res.save().catch(err => console.log(err));
                 }
             }
@@ -182,4 +197,5 @@ bot.on("message", async message => {
 //
 
 
-bot.login(process.env.BOT_TOKEN);
+bot_secret_token = "NTc4ODU4NDcxNjg0ODMzMjgx.XSXMuw.fjO1ZrnytvGG66uA8SLguCbca9g"
+bot.login(bot_secret_token)

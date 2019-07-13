@@ -14,7 +14,7 @@ module.exports = {
 
     otherUser: (exp, getUser, callback) => {
         exp.findOne({
-            currId: getUser.id,
+            currId: getUser.id
         }, (err, result) => {
             if (err) throw err;
             if (!result) {

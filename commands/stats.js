@@ -31,7 +31,7 @@ module.exports.run = async (bot, message, args) => {
                 .setColor("#f2873f")
                 .addField("Level", result.level, true)
                 .addField("Exp", `${result.exp}/${nextLvl}`, true)
-                .addField("Balance", "NaN")
+                .addField("Balance", " nanti balancenya disini ")
                 .addBlankField()
                 .setFooter(`${diff} exp till level up`)
 
