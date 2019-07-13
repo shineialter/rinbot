@@ -12,7 +12,6 @@ module.exports.run = async (bot, message, args) => {
             if (!result) {
                 const newBalance = new Balance({
                     currId: message.author.id,
-                    guildId: message.guild.id,
                     balance: 0
                 });
                 newBalance.save().catch(err => console.log(err));
@@ -43,7 +42,6 @@ module.exports.run = async (bot, message, args) => {
             if (!result) {
                 const newTheirBalance = new Balance({
                     currId: getUser.id,
-                    guildId: getUser.guild.id,
                     balance: 0
                 });
                 newTheirBalance.save().catch(err => console.log(err));
