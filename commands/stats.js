@@ -11,19 +11,14 @@ module.exports.run = async (bot, message, args) => {
 
     if (args[0] == message.author.toString() || !args[0]) {
 
-        fBalance.myself(Balance, message, (result) => {
+        fExpLevel.myself(Exp, message, (result) => {
             if (!result) {
-                const newBalance = new Balance({
-                    currId: message.author.id,
-                    balance: 0
-                });
                 const newExpLevel = new Exp({
                     currId: message.author.id,
                     exp: 0,
                     level: 1
                 });
-                newBalance.save().catch(err => console.log(err));
-                newExpLevel.save().catch(err => console.log(err))
+                newExpLevel.save().catch(err => console.log(err));
             } else {
 
             let nextLvl = result.level * 53;
@@ -31,12 +26,12 @@ module.exports.run = async (bot, message, args) => {
             let userIcon = message.author.displayAvatarURL;
             let statIcon = bot.user.avatarURL;
             let statEmbed = new Discord.RichEmbed()
-                .setAuthor(`${bot.user.username}`)
+                .setAuthor(`${message.author.username}'s Profile`)
                 .setThumbnail(userIcon)
                 .setColor("#f2873f")
                 .addField("Level", result.level, true)
                 .addField("Exp", `${result.exp}/${nextLvl}`, true)
-                .addField("Balance", `¥${result.balance}`)
+                .addField("Balance", "NaN")
                 .addBlankField()
                 .setFooter(`${diff} exp till level up`)
 
