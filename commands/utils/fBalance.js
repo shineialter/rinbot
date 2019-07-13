@@ -1,8 +1,7 @@
 module.exports = {
     myself: (balance, message, callback) => {
         balance.findOne({
-            currId: message.author.id,
-            guildId: message.guild.id
+            currId: message.author.id
         }, (err, result) => {
             if (err) throw err;
             if (!result) {
@@ -15,8 +14,7 @@ module.exports = {
 
     otherUser: (balance, getUser, callback) => {
         balance.findOne({
-            currId: getUser.id,
-            guildId: getUser.guild.id
+            currId: getUser.id
         }, (err, result) => {
             if (err) throw err;
             if (!result) {
