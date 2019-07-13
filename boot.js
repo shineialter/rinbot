@@ -51,7 +51,7 @@ bot.on("message", async message => {
     let args = message.content.slice(prefix.length).split(/ +/);
     let command = args.shift().toLowerCase();
 
-    if (message.author == bot.user) {
+    if (message.author == bot.user || message.author.bot) {
         return
     } 
     
