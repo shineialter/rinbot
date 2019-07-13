@@ -8,7 +8,7 @@ module.exports.run = async (bot, message, args) => {
         .setColor("#f2873f")
         .setThumbnail(boticon)
         .addField("Bot Name", bot.user.username)
-        .addField("Developed By", "Shinei#7000")
+        .addField("Developed By", "Shinei#7000 & Cronix#0363")
         .addField("Servers", `Currently online on ${bot.guilds.size} servers.`);
 
     message.channel.send({embed:botinfoembed});
