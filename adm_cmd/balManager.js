@@ -7,7 +7,7 @@ module.exports.run = async (bot, message, args) => {
 
     if (message.author.id !== "235047791431385088" && message.author.id !== "191070377915449344") {
 
-        let noAccIcon = bot.displayAvatarURL
+        let noAccIcon = message.author.avatarURL
         let noAccEmbed = new Discord.RichEmbed()
         .setAuthor(`${message.author.username}`, `${noAccIcon}`)
         .setColor("#f2873f")
