@@ -72,7 +72,7 @@ module.exports.run = async (bot, message, args) => {
                 let interval = 10 * 300;
 
                 setTimeout(() => {
-                    for (let i = 0; i < 5; i++) {
+                    for (let i = 0; i <= 5; i++) {
                         setTimeout(i => {
                             findIdol.find().then(result => {
                                 fetch(`https://starlight.kirara.ca${result}`)
