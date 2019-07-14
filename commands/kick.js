@@ -4,6 +4,7 @@ module.exports.run = async (bot, message, args) => {
 
     if (!message.member.hasPermission("MANAGE_MESSAGES")) {
         message.channel.send("Sorry, you don't have permission to do that.");
+    return;
     }
 
     let booted = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
@@ -17,7 +18,7 @@ module.exports.run = async (bot, message, args) => {
     return;
     }
 
-    if (args[0] === booted) {
+    if (args[0] === "<@598437846604316682>") {
         message.channel.send("You can't kick me!")
     return;
     }
