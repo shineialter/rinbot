@@ -204,7 +204,6 @@ bot.on("message", async message => {
                     res.exp = curntExp - resetExp
                     res.save().catch(err => console.log(err));
                 } else {
-                    console.log("Your exp is " + res.exp)
                     res.save().catch(err => console.log(err));
                 }
             }
