@@ -2,8 +2,10 @@ const Discord = require("discord.js");
 
 module.exports.run = async (bot, message, args) => {
 
-    let servericon = message.guild.displayAvatarURL;
+    let servericon = message.guild.avatarURL
+    let boticon = bot.user.avatarURL
     let serverinfoembed = new Discord.RichEmbed()
+        .setAuthor(`${bot.user.username}`, `${boticon}`)
         .setDescription("Server Information")
         .setColor("#f2873f")
         .setThumbnail(servericon)

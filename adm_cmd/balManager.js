@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-const Balance = require("../models/balances");
+const Balance = require("../models/balances.js");
 const fBalance = require("../commands/utils/fBalance.js");
 
 
@@ -7,9 +7,9 @@ module.exports.run = async (bot, message, args) => {
 
     if (message.author.id !== "235047791431385088" && message.author.id !== "191070377915449344") {
 
-        let noAccIcon = message.author.avatarURL
+        let noAccIcon = bot.user.avatarURL
         let noAccEmbed = new Discord.RichEmbed()
-        .setAuthor(`${message.author.username}`, `${noAccIcon}`)
+        .setAuthor(`${bot.user.username}`, `${noAccIcon}`)
         .setColor("#f2873f")
         .addField("Insufficient Permission", "Sorry, you don't have permission to do that.");
 
@@ -22,9 +22,9 @@ module.exports.run = async (bot, message, args) => {
 
         if (!getUser) {
 
-            let noUserIcon = message.author.avatarURL
+            let noUserIcon = bot.user.avatarURL
             let noUserEmb = new Discord.RichEmbed()
-            .setAuthor(`${message.author.username}`, `${noUserIcon}`)
+            .setAuthor(`${bot.user.username}`, `${noUserIcon}`)
             .setColor("#f2873f")
             .addField("Error!", `User not found.`);
 
@@ -57,9 +57,9 @@ module.exports.run = async (bot, message, args) => {
 
                     else {
 
-                        let AmtIcon = message.author.avatarURL
+                        let AmtIcon = bot.user.avatarURL
                         let AmtEmb = new Discord.RichEmbed()
-                        .setAuthor(`${message.author.username}`, `${AmtIcon}`)
+                        .setAuthor(`${bot.user.username}`, `${AmtIcon}`)
                         .setColor("#f2873f")
                         .addField("Balance Set!", `You have set your balance to **¥${balSet}**`);
 
@@ -87,9 +87,9 @@ module.exports.run = async (bot, message, args) => {
 
                     if (!balSet) { // kalo gada angka
 
-                        let noAmtIcon = message.author.avatarURL
+                        let noAmtIcon = bot.user.avatarURL
                         let noAmtEmb = new Discord.RichEmbed()
-                        .setAuthor(`${message.author.username}`, `${noAmtIcon}`)
+                        .setAuthor(`${bot.user.username}`, `${noAmtIcon}`)
                         .setColor("#f2873f")
                         .addField("Error!", "You didn't type any amount!");
 
@@ -98,17 +98,17 @@ module.exports.run = async (bot, message, args) => {
 
                     else {
 
-                        let AmtOIcon = message.author.avatarURL
+                        let AmtOIcon = bot.user.avatarURL
                         let AmtOEmb = new Discord.RichEmbed()
-                        .setAuthor(`${message.author.username}`, `${AmtOIcon}`)
+                        .setAuthor(`${bot.user.username}`, `${AmtOIcon}`)
                         .setColor("#f2873f")
                         .addField("Balance Set!", `You have set ${getUser.toString()}'s balance to **¥${balSet}**`);
 
                         message.channel.send({embed:AmtOEmb});
 
-                        let AdmIcon = message.author.avatarURL
+                        let AdmOIcon = bot.user.avatarURL
                         let AdmEmb = new Discord.RichEmbed()
-                        .setAuthor(`${message.author.username}`, `${AmtOIcon}`)
+                        .setAuthor(`${bot.user.username}`, `${AdmOIcon}`)
                         .setColor("#f2873f")
                         .addField("Balance Changed!", `${getUser.user.username}, the administrator has set your balance to **¥${balSet}**!`);
 

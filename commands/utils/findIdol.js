@@ -6,19 +6,19 @@ module.exports.find = () => {
 
     return new Promise((resolve, reject) => {
 
-        if (rngNumFive <= 1.000) { // SSR
+        if (rngNumFive <= 1.000) { // SSR  1%
             findIdolFolder.find("ssrare", idol => {
                 resolve(idol);
             })
-        } else if (rngNumFive >= 1.000 && rngNumFive <= 10.000) { // SR
+        } else if (rngNumFive >= 1.001 && rngNumFive <= 6.000) { // SR  5%
             findIdolFolder.find("srare", idol => {
                 resolve(idol);
             })
-        } else if (rngNumFive >= 10.000 && rngNumFive <= 35.000) { // R
+        } else if (rngNumFive >= 6.001 && rngNumFive <= 30.000) { // R  25%
             findIdolFolder.find("rare", idol => {
                 resolve(idol);
             })
-        } else { // Common
+        } else { // Common  75%
             findIdolFolder.find("common", idol => {
                 resolve(idol);
             })

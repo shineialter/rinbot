@@ -4,6 +4,9 @@ const fBalance = require("./utils/fBalance.js");
 
 module.exports.run = async (bot, message, args) => {
 
+    var userIcon = message.author.avatarURL
+    var botIcon = bot.user.avatarURL
+
     let getUser = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
 
     if (args[0] == message.author.toString() || !args[0]) {
@@ -16,9 +19,9 @@ module.exports.run = async (bot, message, args) => {
                 });
                 newBalance.save().catch(err => console.log(err));
             } else {
-            let balIcon = message.author.avatarURL
+
             let balEmbed = new Discord.RichEmbed()
-                .setAuthor(`${message.author.username}`, `${balIcon}`)
+                .setAuthor(`${message.author.username}`, `${userIcon}`)
                 .setColor("#f2873f")
                 .addField("Your Balance", `¥${result.balance}`);
 
@@ -30,6 +33,7 @@ module.exports.run = async (bot, message, args) => {
     else if (!getUser) {
 
         let notUserEmb = new Discord.RichEmbed()
+        .setAuthor(`${bot.user.username}`, `${botIcon}`)
         .setColor("#f2873f")
         .addField("Error!", `Can't find that user.`);
 
@@ -46,6 +50,7 @@ module.exports.run = async (bot, message, args) => {
                 });
                 newTheirBalance.save().catch(err => console.log(err));
             } else {
+                
             let balTheirIcon = getUser.user.avatarURL
             let balTheirEmbed = new Discord.RichEmbed()
                 .setAuthor(`${getUser.user.username}`, `${balTheirIcon}`)

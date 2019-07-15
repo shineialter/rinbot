@@ -1,314 +1,189 @@
 const Discord = require("discord.js");
 const Balance = require("../models/balances.js");
 const fBalance = require("./utils/fBalance.js");
+const Cooldown = require("../models/cooldowns.js");
+const fCooldown = require("./utils/fCooldown.js");
 const findIdol = require("./utils/findIdol.js");
-const fetch = require('node-fetch-npm')
-const gachaPrev = new Set();
-const gachaCd = new Set();
-const gachaOneCd = new Set();
 
+// Script idea by Cronix#0363
+// Script structured by Shinei#7000
+// API by Starlight Kirara
 
 module.exports.run = async (bot, message, args) => {
 
-    if (args[0] == "5x") {
+    var sec = 1000;
+    var min = sec * 60;
+    var botIcon = bot.user.avatarURL
 
-        fBalance.myself(Balance, message, (result) => {
-            if (!result) {
-                const newBalance = new Balance({
-                    currId: message.author.id,
-                    balance: 0
-                });
-                newBalance.save().catch(err => console.log(err));
-            } 
-            
-            else {
-
-                if (gachaPrev.has(message.author.id)) {
-
-                    let gachaPrevEmb = new Discord.RichEmbed()
-                        .setColor("#f2873f")
-                        .addField("GachaPon", `Gacha **in progress**!`);
-
-                    message.channel.send({embed:gachaPrevEmb})
-                    .then(message => {
-                        message.delete(10000)
-                    })
-                } 
-                
-                else if (gachaCd.has(message.author.id)) {
-                    message.channel.send(`${message.author.toString()} please wait **20 seconds** before you pull again!`)
-                    .then(message => {
-                        message.delete(20000)
-                    })
-                } 
-                
-                else {
-                let curntBal = result.balance;
-
-                if (curntBal < 1250) {
-
-                    let noMoneyEmb = new Discord.RichEmbed()
-                        .setColor("#f2873f")
-                        .addField("GachaPon", `Sorry **${message.author.username}**, you don't have enough money to pull 5x gacha.`);
-
-                        message.delete(4000).catch(O_o=>{});
-                        message.channel.send({embed:noMoneyEmb}).then(message => {message.delete(4000)});
-                } 
-                
-                else if (curntBal >= 1250) {
-                
-                result.balance = curntBal - 1250;
-                
-                let startGachaEmb = new Discord.RichEmbed()
-                        .setColor("#f2873f")
-                        .addField("GachaPon", `${message.author.toString()} please check your direct message for your pulls. **Good luck**!`);
-
-                message.channel.send({embed:startGachaEmb})
-
-                setTimeout(() => {
-                message.author.send(`Here are your pulls, **${message.author.username}**.`);
-                }, 2000)
-
-                let interval = 10 * 300;
-
-                setTimeout(() => {
-                    for (let i = 0; i <= 5; i++) {
-                        setTimeout(i => {
-                            findIdol.find().then(result => {
-                                fetch(`https://starlight.kirara.ca${result}`)
-                                    .then(res => res.json()).then(idol => {
-                                        const { result } = idol;
-                                        const img = result[0].card_image_ref
-        
-                                        //.////////////// EDIT EMBED MESSAGE HERE /////////////////////
-                                        let getSSREmb = new Discord.RichEmbed()
-                                            .setColor("#f2873f")
-                                            .addField("GachaPon", `**${result[0].name}**`)
-                                            .setImage(img)
-                                            .setFooter(`Script helped by Cronix#0363`)
-        
-                                        message.author.send({ embed: getSSREmb });
-        
-                                        // SSR
-                                        if (result[0].rarity.rarity === 7) {
-
-                                            let announceEmb = new Discord.RichEmbed()
-                                                .setColor("#f2873f")
-                                                .addField("GachaPon", `${message.author.toString()} just pulled a **SSR**!!!`)
-                                                .setFooter(`Script helped by Cronix#0363`)
-
-                                            message.channel.send({embed:announceEmb});
-
-                                        }
-                                    }).catch(err => console.log(err))
-                            });
-                        }, interval * i, i)
-                    }
-                }, 4000)
-                    
-
-                    /*
-                for(let i = 0 ; i <= 5 ; i++) {
-                setTimeout(function (i) {
-                    let rngNumTen = (Math.random() * (100.000 - 0.001) + 0.001).toFixed(3);
-                    console.log(rngNumTen);
-
-                    if (rngNumTen <= 1.000) {
-                        console.log("You rolled a SSR!");
-
-                        let getSSREmb = new Discord.RichEmbed()
-                        .setColor("#f2873f")
-                        .addField("GachaPon", "Holy... you pulled a **Legendary**!!!")
-
-                        message.channel.send(`${message.author.toString()} just pulled a **Legendary**!!!`);
-                        message.author.send({embed:getSSREmb});
-                    }
-        
-                    else if (rngNumTen >= 1.000 && rngNumTen <= 10.000) {
-                        console.log("You rolled a SR!");
-
-                        let getSREmb = new Discord.RichEmbed()
-                        .setColor("#f2873f")
-                        .addField("GachaPon", "You rolled a **Super Rare**!")
-
-                        message.author.send({embed:getSREmb});
-                    } 
-        
-                    else if (rngNumTen >= 10.000 && rngNumTen <= 35.000) {
-                        console.log("You rolled a R!");
-
-                        let getREmb = new Discord.RichEmbed()
-                        .setColor("#f2873f")
-                        .addField("GachaPon", "You rolled a **Rare**!")
-
-                        message.author.send({embed:getREmb});
-                    }
-        
-                    else {
-                        console.log("You rolled a C!");
-
-                        let getCEmb = new Discord.RichEmbed()
-                        .setColor("#f2873f")
-                        .addField("GachaPon", "You rolled a **Common**!")
-
-                        message.author.send({embed:getCEmb});
-                        }
-                    }, interval * i, i);
-                }
-            */
-                
-
-                setTimeout(() => {
-                    message.author.send("I gave you one free pull for doing **5x gacha**! :D");
-                }, 22000)
-
-                result.save().catch(err => console.log(err));
-
-                gachaPrev.add(message.author.id);
-                setTimeout(() => {
-                    gachaPrev.delete(message.author.id);
-                }, 22000)
-
-                gachaCd.add(message.author.id);
-                setTimeout(() => {
-                    gachaCd.delete(message.author.id);
-                }, 42000)
-                }
-            }
-            }    
-        });
+    if (!args[0]) {
+        return;
     }
-    
 
-    else if (args[0] == "1x") {
+    else if (args[0] == "imas") {
 
-        fBalance.myself(Balance, message, (result) => {
-            if (!result) {
-                const newBalance = new Balance({
-                    currId: message.author.id,
-                    balance: 0
-                });
-                newBalance.save().catch(err => console.log(err));
-            } 
-            
-            else {
+        var amtGacha = args.slice(1).join(" ");
+        var notNumber = isNaN(amtGacha)
 
-                let curntBalOnce = result.balance;
+        if (!amtGacha) {
 
-                if (curntBalOnce < 250) {
+            let noAmtEmb = new Discord.RichEmbed()
+                .setAuthor(`${bot.user.username}`, `${botIcon}`)
+                .setColor("#f2873f")
+                .addField("Im@s Gacha Simulator", "You didn't write the amount of pulls you want!")
+                .addField("Example", "?gachasim imas 5");
 
-                    let noMoneyOEmb = new Discord.RichEmbed()
-                        .setColor("#f2873f")
-                        .addField("GachaPon", `Sorry **${message.author.username}**, you don't have enough money to pull a gacha.`);
+            message.channel.send({embed:noAmtEmb})
+        }
 
-                        message.delete(4000).catch(O_o=>{});
-                        message.channel.send({embed:noMoneyOEmb}).then(message => {message.delete(4000)});
-                } 
-                
-                else if (curntBalOnce >= 250) {
-                
-                result.balance = curntBalOnce - 250;
+        else if (notNumber) {
 
-                let startGachaEmb = new Discord.RichEmbed()
-                        .setColor("#f2873f")
-                        .addField("GachaPon", `${message.author.toString()} please check your direct message for your pull. **Good luck**!`);
+            let nanEmb = new Discord.RichEmbed()
+                .setAuthor(`${bot.user.username}`, `${botIcon}`)
+                .setColor("#f2873f")
+                .addField("Im@s Gacha Simulator", "Please input a **number**!")
 
-                message.channel.send({embed:startGachaEmb})
+            message.channel.send({embed:nanEmb})
+        }
 
-                setTimeout(() => {
-                    message.author.send(`You have rolled....`);
-                    }, 2000)
-                
-                setTimeout(() => {
-                findIdol.find().then(result => {
-                    fetch(`https://starlight.kirara.ca${result}`)
-                        .then(res => res.json()).then(idol => {
-                            const { result } = idol;
-                            const img = result[0].card_image_ref
+        else if (amtGacha > 10) {
 
-                            //.////////////// EDIT EMBED MESSAGE HERE /////////////////////
-                            let getSSREmb = new Discord.RichEmbed()
-                                .setColor("#f2873f")
-                                .addField("GachaPon", `**${result[0].name}**`)
-                                .setImage(img)
-                                .setFooter(`Script helped by Cronix#0363`)
+            let moreEmb = new Discord.RichEmbed()
+                .setAuthor(`${bot.user.username}`, `${botIcon}`)
+                .setColor("#f2873f")
+                .addField("Im@s Gacha Simulator", "You cannot pull **more than 10** per gacha!")
 
-                            message.author.send({ embed: getSSREmb });
+            message.channel.send({embed:moreEmb})
+        }
 
-                            // SSR
-                            if (result[0].rarity.rarity === 7) {
+        else {
+            fCooldown.gacha(Cooldown, message, (result) => {
+                if (!result) {
+                    const newCooldownUser = new Cooldown({
+                        currId: message.author.id,
+                        command: "gacha",
+                        timenow: Date.now(),
+                        cdtime: Date.now()
+                    });
+                    newCooldownUser.save().catch(err => console.log(err));
+                }
 
-                                let announceEmb = new Discord.RichEmbed()
-                                    .setColor("#f2873f")
-                                    .addField(`${message.author.toString()} just pulled a **SSR**!!!`)
-                                    .setFooter(`Script helped by Cronix#0363`)
+                else if (result) {
 
-                                message.channel.send({embed:announceEmb});
+                    result.timenow = Date.now()
 
+                    if (result.timenow >= result.cdtime) {
+
+                        fBalance.myself(Balance, message, (result) => {
+                            if (!result) {
+                                const newBalanceUser = new Balance({
+                                    currId: message.author.id,
+                                    balance: 0
+                                });
+                            newBalanceUser.save().catch(err => console.log(err));
                             }
-                        }).catch(err => console.log(err))
-                });
-            }, 5000)
-                /*let rngNumOnce = (Math.random() * (100.000 - 0.001) + 0.001).toFixed(3);
-                console.log(rngNumOnce);
+    
+                            else if (result) {
+    
+                                var currentBal = result.balance;
+                                var price = 250 * amtGacha;
+    
+                                if (currentBal < price) {
+    
+                                    let noMoneyEmb = new Discord.RichEmbed()
+                                    .setAuthor(`${bot.user.username}`, `${botIcon}`)
+                                    .setColor("#f2873f")
+                                    .addField("Im@s Gacha Simulator", `Sorry, you don't have enough money to pull **${amtGacha}** gacha.`)
+    
+                                    message.channel.send({embed:noMoneyEmb})
+    
+                                }
+    
+                                else {
+                                    result.balance = result.balance - price;
 
-                if (rngNumOnce <= 1.000) {
-                    console.log("You rolled a SSR!");
+                                    let startGachaEmb = new Discord.RichEmbed()
+                                    .setAuthor(`${bot.user.username}`, `${botIcon}`)
+                                    .setColor("#f2873f")
+                                    .addField("Im@s Gacha Simulator", `**${message.author.toString()}, you just bought ${amtGacha} gacha. Good luck**!`);
 
-                    let getSSREmb = new Discord.RichEmbed()
-                    .setColor("#f2873f")
-                    .addField("GachaPon", "Holy... you pulled a **Legendary**!!!")
+                                    message.channel.send({embed:startGachaEmb})
 
-                    message.channel.send(`${message.author.toString()} just pulled a **Legendary**!!!`);
-                    message.author.send({embed:getSSREmb});
+                                    setTimeout(() => {
+                                        message.author.send(`**You just pulled...**`);
+                                    }, 2000)
+                                    
+                                    let interval = 10 * 300;
+                                    let gachaTime = 3000 * amtGacha;
+                                    
+                                    setTimeout(() => {
+                                        for (let i = 1; i <= amtGacha; i++) {
+                                            setTimeout(i => {
+                                                findIdol.find().then(result => {
+
+                                                    const card_img = result.card_image_ref;
+
+                                                    let getGachaEmb = new Discord.RichEmbed()
+                                                        .setAuthor(`${result.chara.conventional}`, `${result.chara.icon_image_ref}`)
+                                                        .setColor("#f2873f")
+                                                        .addField("Im@s Gacha Simulator", `**${result.name}**`)
+                                                        .setImage(card_img);
+                                
+                                                    message.author.send({embed:getGachaEmb});
+                                
+                                                    // SSR
+                                                    if (result.rarity.rarity === 7) {
+                                
+                                                        let announceEmb = new Discord.RichEmbed()
+                                                            .setAuthor(`${bot.user.username}`, `${botIcon}`)
+                                                            .setColor("#f2873f")
+                                                            .addField("Im@s Gacha Simulator", `${message.author.toString()} **just pulled a SSR**!!!`);
+                                
+                                                        message.channel.send({embed:announceEmb});
+                                                    }
+                                                });
+                                            }, interval * i, i)
+                                        }
+                                    }, 4000)
+                                
+                                    setTimeout(() => {
+                                        message.author.send("**Gacha completed!**");
+                                    }, gachaTime + 6000)
+                                    
+                                    result.save().catch(err => console.log(err));
+                                }
+                            }
+                        })
+
+                        result.cdtime = Date.now() + min;
+                        result.save().catch(err => console.log(err));
+                    }
+
+                    else {
+
+                        let t = Math.abs(result.cdtime - result.timenow) / 1000;
+                        let s = Math.floor(t % 60);
+
+                        let moreEmb = new Discord.RichEmbed()
+                            .setAuthor(`${bot.user.username}`, `${botIcon}`)
+                            .setColor("#f2873f")
+                            .addField("Im@s Gacha Simulator", `**You can gacha again in ${s} seconds.**`);
+
+                        message.channel.send({embed:moreEmb})
+                    }
                 }
-
-                else if (rngNumOnce >= 1.000 && rngNumOnce <= 10.000) {
-                    console.log("You rolled a SR!");
-
-                    let getSREmb = new Discord.RichEmbed()
-                    .setColor("#f2873f")
-                    .addField("GachaPon", "You rolled a **Super Rare**!")
-
-                    message.author.send({embed:getSREmb});
-                } 
-
-                else if (rngNumOnce >= 10.000 && rngNumOnce <= 35.000) {
-                console.log("You rolled a R!");
-
-                    let getREmb = new Discord.RichEmbed()
-                    .setColor("#f2873f")
-                    .addField("GachaPon", "You rolled a **Rare**!")
-
-                    message.author.send({embed:getREmb});
-                }
-
-                else {
-                    console.log("You rolled a C!");
-
-                    let getCEmb = new Discord.RichEmbed()
-                    .setColor("#f2873f")
-                    .addField("GachaPon", "You rolled a **Common**!")
-
-                    message.author.send({embed:getCEmb});
-                }*/
-
-                result.save().catch(err => console.log(err));
-                }
-            }
-        });
+            })
+        }
     }
 
-    else if (!args[0]) {
+    else if (args[0] == "help") {
 
-        let iGaIcon = message.author.avatarURL
         let iGaEmmbed = new Discord.RichEmbed()
-        .setAuthor(`${message.author.username}`, `${iGaIcon}`)
+        .setAuthor(`${bot.user.username}`, `${botIcon}`)
         .setColor("#f2873f")
-        .addField("Im@s Gacha Simulator", "Correct usage:  ?imasgacha <amount>")
-        .addField("Example", "?imasgacha 5x")
-        .addField("Pulls", "1x\n5x", true)
-        .addField("Cost", "¥250\n¥1250 + 1 free", true);
+        .addField("Gacha Simulator", "Correct usage:  ?gachasim <gachatype> <amount>")
+        .addField("Example", "?gachasim imas 7")
+        .addField("Gacha Type", "Im@s", true)
+        .addField("Cost", "¥250/1 gacha", true);
 
         message.channel.send({embed:iGaEmmbed})
     }

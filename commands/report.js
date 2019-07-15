@@ -1,107 +1,141 @@
 const Discord = require("discord.js");
-const repCd = new Set();
-const repCdban = new Set();
+const getCd = new Set();
 
+//Report cooldowns are not universal.
 module.exports.run = async (bot, message, args) => {
 
+    var botIcon = bot.user.avatarURL
+    var repUser = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
+    var repReas = args.slice(1).join(" ");
+
     if (args[0] == "help") {
-        message.reply("```Usage: ?report <user> <reason>```");
+
+        let helpEmb = new Discord.RichEmbed()
+        .setAuthor(`${bot.user.username}`, `${botIcon}`)
+        .setColor("#f2873f")
+        .addField("Report System", `Correct usage:  ?report <tag user> <reason>`)
+        .addField("Example", "?report @Shinei for making Rin broken :(");
+
+        message.channel.send({embed:helpEmb})
     return;
     }
-
-    let repUser = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
     
-    if (!args[0]) {
+    else if (!args[0]) {
         return;
     }
 
-    if (args[0] === message.author.toString()) {
-        message.channel.send("You can't report yourself.")
+    else if (args[0] === message.author.toString()) {
+
+        let urselfEmb = new Discord.RichEmbed()
+        .setAuthor(`${bot.user.username}`, `${botIcon}`)
+        .setColor("#f2873f")
+        .addField("Report System", `**You can't report yourself!**`);
+
+        message.channel.send({embed:urselfEmb})
     return;
     }
 
-    if (args[0] === "<@235047791431385088>") {
-        message.channel.send("Hey, that's my creator!!")
+    else if (args[0] === "<@235047791431385088>") {
+
+        ownEmb = new Discord.RichEmbed()
+        .setAuthor(`${bot.user.username}`, `${botIcon}`)
+        .setColor("#f2873f")
+        .addField("Report System", `**You can't report my creator!!!**`);
+
+        message.channel.send({embed:ownEmb})
     return;
     }
 
-    if (args[0] === bot.user.toString()) {
-        message.channel.send("Why are you reporting me?")
-        .then(message => {
-            message.delete(8000)
-        })
-        setTimeout(() => {
-            message.channel.send("I won't accept reports from you then. (You can't report someone for the next **10 minutes**.)")
-            .then(message => {
-                message.delete(5000)
-            })
-        }, 3000)
+    else if (args[0] === bot.user.toString()) {
+        
+        rinEmb = new Discord.RichEmbed()
+        .setAuthor(`${bot.user.username}`, `${botIcon}`)
+        .setColor("#f2873f")
+        .addField("Report System", `**...**`);
 
-        repCdban.add(message.author.id);
-        setTimeout(() => {
-            repCdban.delete(message.author.id);
-        }, 100000)
+        message.channel.send({embed:rinEmb})
     return;
     }
 
-    if (!repUser) {
-        message.channel.send("Can't find user.")
+    else if (!repUser) {
+
+        noUserEmb = new Discord.RichEmbed()
+        .setAuthor(`${bot.user.username}`, `${botIcon}`)
+        .setColor("#f2873f")
+        .addField("Report System", `**Can't find user!**`);
+
+        message.delete(4000).catch(O_o=>{});
+        message.channel.send({embed:noUserEmb})
         .then(message => {
             message.delete(4000)
         })
     return;
     }
 
-    let repReas = args.slice(1).join(" ");
+    else if (!repReas) {
 
-    if (!repReas) {
-        message.channel.send("You can't report someone for no reason!")
+        noReasEmb = new Discord.RichEmbed()
+        .setAuthor(`${bot.user.username}`, `${botIcon}`)
+        .setColor("#f2873f")
+        .addField("Report System", `**You can't report someone for no reason!**`);
+
+        message.channel.send({embed:noReasEmb})
     return;
     }
 
+    else if (args[0]) {
 
-    let repEmbed = new Discord.RichEmbed()
-    .setColor("#f2873f")
-    .addField("Report Submitted", `${repUser} ID: ${repUser.id}\nReason: ${repReas}`)
-
-    let repsendEmbed = new Discord.RichEmbed()
-    .setDescription("Report Issued")
-    .setColor("#f2873f")
-    .addField("Reported User:", `${repUser} ID: ${repUser.id}`)
-    .addField("Reported By:", `${message.author.username}`)
-    .addField("Channel:", message.channel)
-    .addField("Time:", message.createdAt)
-    .addField("Reason:", repReas);
-
-    let repChan = message.guild.channels.find(x => x.name === "reports");
-
-    if (!repChan) {
-        message.channel.send("You need to make a **#reports** channel first.")
-    return;
-    }
-
-    if (repCd.has(message.author.id)) {
-        message.channel.send(`${message.author.toString()}, you have to wait **5 minutes** before you can report someone again.`)
-        .then(message => {
-            message.delete(5000)
+        let repEmbed = new Discord.RichEmbed()
+        .setAuthor(`${bot.user.username}`, `${botIcon}`)
+        .setColor("#f2873f")
+        .addField("Report Submitted", `${repUser} ID: ${repUser.id}\nReason: ${repReas}`)
+    
+        let repsendEmbed = new Discord.RichEmbed()
+        .setAuthor(`${bot.user.username}`, `${botIcon}`)
+        .setDescription("Report Issued")
+        .setColor("#f2873f")
+        .addField("Reported User:", `${repUser} ID: ${repUser.id}`)
+        .addField("Reported By:", `${message.author.username}`)
+        .addField("Channel:", message.channel)
+        .addField("Time:", message.createdAt)
+        .addField("Reason:", repReas);
+    
+        let repChan = message.guild.channels.find(x => x.name === "reports");
+    
+        if (!repChan) {
+    
+            noChEmb = new Discord.RichEmbed()
+            .setAuthor(`${bot.user.username}`, `${botIcon}`)
+            .setColor("#f2873f")
+            .addField("Report System", `Missing **#reports** channel`);
+    
+            message.channel.send({embed:noChEmb})
         return;
-        })
+        }
 
-    } else if (repCdban.has(message.author.id)) {
-        message.channel.send("Report **denied**.")
-        .then(message => {
-            message.delete(5000)
-        return;
-        })
+        else if (getCd.has(message.author.id)) {
 
-    } else {
-        //message.delete().catch(O_o=>{});
-        message.channel.send({embed:repEmbed})
-        repChan.send({embed:repsendEmbed});
+            cdEmb = new Discord.RichEmbed()
+                .setAuthor(`${bot.user.username}`, `${botIcon}`)
+                .setColor("#f2873f")
+                .addField("Report Denied", `${message.author.toString()}, **you have to wait 5 minutes before you can report again**.`);
+    
+            message.channel.send({embed:cdEmb});
+            return;
+        }
 
-        repCd.add(message.author.id);
-        setTimeout(() => {
-            repCd.delete(message.author.id);
-        }, 300000)
+        else {
+            
+            message.channel.send({embed:repEmbed})
+            repChan.send({embed:repsendEmbed});
+
+            getCd.add(message.author.id)
+            setTimeout(() => {
+                getCd.delete(message.author.id)
+            }, 300000);
+        }
+
     }
 }
+
+        //message.delete().catch(O_o=>{});
