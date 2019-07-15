@@ -151,11 +151,11 @@ module.exports.run = async (bot, message, args) => {
                                     
                                     result.save().catch(err => console.log(err));
                                 }
+                                
+                                result.cdtime = Date.now() + min;
+                                result.save().catch(err => console.log(err));
                             }
                         })
-
-                        result.cdtime = Date.now() + min;
-                        result.save().catch(err => console.log(err));
                     }
 
                     else {
