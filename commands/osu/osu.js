@@ -31,7 +31,7 @@ module.exports.run = async (bot, message, args) => {
             else if (res_othuser) {
 
                 var mentioneduser = res_othuser.osu_username;
-                console.log(mentioneduser);
+
                 var mentiongetuser = await osu.getUser({u: mentioneduser});
                 var mentionid = mentiongetuser.id;
                 var mentionosuname = mentiongetuser.name;
