@@ -2,12 +2,12 @@ module.exports = {
     myself: (balance, message, callback) => {
         balance.findOne({
             currId: message.author.id
-        }, (err, result) => {
+        }, (err, resultbal) => {
             if (err) throw err;
-            if (!result) {
-                callback(result);
+            if (!resultbal) {
+                callback(resultbal);
             } else {
-                callback(result)
+                callback(resultbal)
             }
         })
     },
@@ -15,12 +15,12 @@ module.exports = {
     otherUser: (balance, getUser, callback) => {
         balance.findOne({
             currId: getUser.id
-        }, (err, result) => {
+        }, (err, resultbalo) => {
             if (err) throw err;
-            if (!result) {
-                callback(result);
+            if (!resultbalo) {
+                callback(resultbalo);
             } else {
-                callback(result)
+                callback(resultbalo)
             }
         })
     }

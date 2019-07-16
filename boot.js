@@ -1,5 +1,11 @@
 const config = require("./config.json");
 
+const Discord = require("discord.js");
+const jimp = require("jimp")
+const fs = require("fs");
+const mongoose = require("mongoose");
+
+const helpcmd = require("./commands/helpmee.js");
 const infocmd = require("./commands/info.js");
 const sinfocmd = require("./commands/serverinfo.js");
 const repcmd = require("./commands/report.js");
@@ -9,22 +15,21 @@ const prcmd = require("./commands/prefix.js");
 const currcmd = require("./commands/currency.js");
 const daibal = require("./commands/dailybal.js");
 const stcmd = require("./commands/stats.js");
-const imasgchcmd = require("./commands/imasgachasim.js");
-
-const test = require("./testing.js");
+const gchcmd = require("./commands/gachasim.js");
+const osucmd = require("./commands/osu/osu.js");
+const osusetcmd = require("./commands/osu/osuset.js");
 
 const admsetbal = require("./adm_cmd/balManager.js");
 const admsetcd = require("./adm_cmd/cdManager.js");
+const test = require("./testing.js");
 
-const Discord = require("discord.js");
-const jimp = require("jimp")
-const fs = require("fs");
-const mongoose = require("mongoose");
+const Balance = require("./models/balances.js")
+const Exp = require("./models/exps.js");
 
 const bot = new Discord.Client();
 
-// Bot by Shinei#7000
 
+// Connect to rin's database in mongodb
 mongoose.connect(`mongodb://${process.env.MONGODB_USER}:${process.env.MONGODB_PW}@rinbot-shard-00-00-6iqrw.mongodb.net:27017,rinbot-shard-00-01-6iqrw.mongodb.net:27017,rinbot-shard-00-02-6iqrw.mongodb.net:27017/test?ssl=true&replicaSet=rinbot-shard-0&authSource=admin&retryWrites=true&w=majority`, {
     useCreateIndex: true, useNewUrlParser: true})
 
@@ -35,10 +40,7 @@ mongoose.connection.on("open", () => {
 })
 
 
-const Balance = require("./models/balances.js")
-const Exp = require("./models/exps.js");
-
-
+// Bot by Shinei#7000
 bot.on("ready", async () => {
     console.log(`${bot.user.username} is ready and online!`);
     console.log(`Currently ${bot.user.username} is online on ${bot.guilds.size} servers!`);
@@ -69,11 +71,15 @@ bot.on("message", async message => {
 
     else if (message.content.startsWith(prefix)) {
 
-        if (command === `info`) {
+        if (command === `help`) {
+            helpcmd.run(bot, message, args);
+        }
+
+        if (command === `botinfo` || command === `binfo`) {
             infocmd.run(bot, message, args);
         }
     
-        if (command === `serverinfo`) {
+        if (command === `serverinfo` || command === `sinfo`) {
             sinfocmd.run(bot, message, args);
         }
     
@@ -95,11 +101,11 @@ bot.on("message", async message => {
 
         // --- //
 
-        if (command === `balance`) { // need fix
+        if (command === `balance` || command === `bal`) { // need fix
             currcmd.run(bot, message, args)
         }
 
-        if (command === `dailybal`) {
+        if (command === `dailybalance` || command === `dailybal` || command === `dbal`) {
             daibal.run(bot, message, args)
         }
     
@@ -111,8 +117,18 @@ bot.on("message", async message => {
             stcmd.run(bot, message, args)
         }
 
-        if (command === `gachasim`) {
-            imasgchcmd.run(bot, message, args)
+        if (command === `gachasimulator` || command === `gachasim` || command === `gsim`) {
+            gchcmd.run(bot, message, args)
+        }
+
+        // --- //
+
+        if (command === `osu`) {
+            osucmd.run(bot, message, args)
+        }
+
+        if (command === `osuset`) {
+            osusetcmd.run(bot, message, args)
         }
         
         // --- //

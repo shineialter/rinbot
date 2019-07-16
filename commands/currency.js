@@ -11,8 +11,8 @@ module.exports.run = async (bot, message, args) => {
 
     if (args[0] == message.author.toString() || !args[0]) {
 
-        fBalance.myself(Balance, message, (result) => {
-            if (!result) {
+        fBalance.myself(Balance, message, (resultbal) => {
+            if (!resultbal) {
                 const newBalance = new Balance({
                     currId: message.author.id,
                     balance: 0
@@ -23,7 +23,7 @@ module.exports.run = async (bot, message, args) => {
             let balEmbed = new Discord.RichEmbed()
                 .setAuthor(`${message.author.username}`, `${userIcon}`)
                 .setColor("#f2873f")
-                .addField("Your Balance", `¥${result.balance}`);
+                .addField("Your Balance", `¥${resultbal.balance}`);
 
                 message.channel.send({embed:balEmbed});
             }
@@ -42,8 +42,8 @@ module.exports.run = async (bot, message, args) => {
     }
 
     else if (getUser) {
-        fBalance.otherUser(Balance, getUser, (result) => {
-            if (!result) {
+        fBalance.otherUser(Balance, getUser, (resultbalo) => {
+            if (!resultbalo) {
                 const newTheirBalance = new Balance({
                     currId: getUser.id,
                     balance: 0
@@ -55,7 +55,7 @@ module.exports.run = async (bot, message, args) => {
             let balTheirEmbed = new Discord.RichEmbed()
                 .setAuthor(`${getUser.user.username}`, `${balTheirIcon}`)
                 .setColor("#f2873f")
-                .addField(`${getUser.user.username}'s Balance`, `¥${result.balance}`);
+                .addField(`${getUser.user.username}'s Balance`, `¥${resultbalo.balance}`);
 
                 message.channel.send({embed:balTheirEmbed});
             }

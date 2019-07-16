@@ -12,8 +12,8 @@ var day = hour * 24;
 
 module.exports.run = async (bot, message, args) => {
 
-    fCooldown.dailybal(Cooldown, message, (result) => {
-        if (!result) {
+    fCooldown.dailybal(Cooldown, message, (resultdaily) => {
+        if (!resultdaily) {
             const newCooldownUser = new Cooldown({
                 currId: message.author.id,
                 command: "dailybal",
@@ -23,14 +23,14 @@ module.exports.run = async (bot, message, args) => {
             newCooldownUser.save().catch(err => console.log(err));
         } 
         
-        else if (result) {
+        else if (resultdaily) {
 
-            result.timenow = Date.now()
+            resultdaily.timenow = Date.now()
                 
-                if (result.timenow >= result.cdtime) {
+                if (resultdaily.timenow >= resultdaily.cdtime) {
 
-                    fBalance.myself(Balance, message, (result) => {
-                        if (!result) {
+                    fBalance.myself(Balance, message, (resultbal) => {
+                        if (!resultbal) {
                             const newBalance = new Balance({
                                 currId: message.author.id,
                                 balance: 0
@@ -45,15 +45,16 @@ module.exports.run = async (bot, message, args) => {
                             .addField("Daily Balance", "You have received **¥100**!")
             
                             message.channel.send({embed:dBalEmb});
+                            resultbal.save().catch(err => console.log(err));
                         }  
                     })
 
-                    result.cdtime = Date.now() + day;
-                    result.save().catch(err => console.log(err));
+                    resultdaily.cdtime = Date.now() + day;
+                    resultdaily.save().catch(err => console.log(err));
 
                 } else {
 
-                    let t = Math.abs(result.cdtime - result.timenow) / 1000;
+                    let t = Math.abs(resultdaily.cdtime - resultdaily.timenow) / 1000;
                     let h = Math.floor(t / 3600) % 24;
                     let m = Math.floor(t / 60) % 60;
                     let s = Math.floor(t % 60);
@@ -66,7 +67,7 @@ module.exports.run = async (bot, message, args) => {
 
                     message.channel.send({embed:dBalCd})
 
-                    result.save().catch(err => console.log(err));
+                    resultdaily.save().catch(err => console.log(err));
                 }
             } 
         })

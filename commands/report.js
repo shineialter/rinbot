@@ -8,19 +8,7 @@ module.exports.run = async (bot, message, args) => {
     var repUser = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
     var repReas = args.slice(1).join(" ");
 
-    if (args[0] == "help") {
-
-        let helpEmb = new Discord.RichEmbed()
-        .setAuthor(`${bot.user.username}`, `${botIcon}`)
-        .setColor("#f2873f")
-        .addField("Report System", `Correct usage:  ?report <tag user> <reason>`)
-        .addField("Example", "?report @Shinei for making Rin broken :(");
-
-        message.channel.send({embed:helpEmb})
-    return;
-    }
-    
-    else if (!args[0]) {
+    if (!args[0]) {
         return;
     }
 

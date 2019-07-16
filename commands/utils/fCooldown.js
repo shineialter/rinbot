@@ -17,12 +17,12 @@ module.exports = {
         cooldown.findOne({
             currId: message.author.id,
             command: "dailybal"
-        }, (err, result) => {
+        }, (err, resultdaily) => {
             if (err) throw err;
-            if (!result) {
-                callback(result);
+            if (!resultdaily) {
+                callback(resultdaily);
             } else {
-                callback(result)
+                callback(resultdaily)
             }
         })
     },
@@ -31,26 +31,12 @@ module.exports = {
         cooldown.findOne({
             currId: message.author.id,
             command: "gacha"
-        }, (err, result) => {
+        }, (err, resultgacha) => {
             if (err) throw err;
-            if (!result) {
-                callback(result);
+            if (!resultgacha) {
+                callback(resultgacha);
             } else {
-                callback(result)
-            }
-        })
-    },
-
-    report: (cooldown, message, callback) => {
-        cooldown.findOne({
-            currId: message.author.id,
-            command: "report"
-        }, (err, result) => {
-            if (err) throw err;
-            if (!result) {
-                callback(result);
-            } else {
-                callback(result)
+                callback(resultgacha)
             }
         })
     }
