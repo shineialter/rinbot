@@ -5,7 +5,7 @@ const fOsuUser = require("./utils/fOsuUser.js");
 
 module.exports.run = async (bot, message, args) => {
     
-        var osu = new nodeosu.Api('${process.env.OSUAPI_TOKEN}', {
+        var osu = new nodeosu.Api(process.env.OSUAPI_TOKEN, {
             notFoundAsError: true,
             completeScores: false
         });
