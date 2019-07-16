@@ -37,7 +37,9 @@ module.exports.run = async (bot, message, args) => {
                             });
                             newBalance.save().catch(err => console.log(err));
                         } else {
-            
+                            
+                            result.balance + 100;
+                            
                             let dBalIcon = message.author.avatarURL
                             let dBalEmb = new Discord.RichEmbed()
                             .setAuthor(`${message.author.username}`, `${dBalIcon}`)
