@@ -38,13 +38,13 @@ module.exports.run = async (bot, message, args) => {
                             newBalance.save().catch(err => console.log(err));
                         } else {
                             
-                            resultbal.balance = resultbal.balance + 100;
+                            resultbal.balance = resultbal.balance + 250;
                             
                             let dBalIcon = message.author.avatarURL
                             let dBalEmb = new Discord.RichEmbed()
                             .setAuthor(`${message.author.username}`, `${dBalIcon}`)
                             .setColor("#f2873f")
-                            .addField("Daily Balance", "You have received **¥100**!")
+                            .addField("Daily Balance", "You have received **¥250**!")
             
                             message.channel.send({embed:dBalEmb});
                             resultbal.save().catch(err => console.log(err));
