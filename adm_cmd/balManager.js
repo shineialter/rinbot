@@ -1,6 +1,6 @@
 const Discord = require("discord.js");
-const Balance = require("../models/balances.js");
-const fBalance = require("../commands/utils/fBalance.js");
+const Economy = require("../models/economys.js");
+const fEconomy = require("../commands/utils/fEconomy.js");
 
 
 module.exports.run = async (bot, message, args) => {
@@ -33,13 +33,13 @@ module.exports.run = async (bot, message, args) => {
 
         else if (args[0] == message.author.toString()) {
 
-            fBalance.myself(Balance, message, (result) => {
-                if (!result) {
-                    const newBalance = new Balance({
+            fEconomy.myself(Economy, message, (resulteco) => {
+                if (!resulteco) {
+                    const newEconomy = new Economy({
                         currId: message.author.id,
                         balance: 0
                     });
-                    newBalance.save().catch(err => console.log(err));
+                    newEconomy.save().catch(err => console.log(err));
                 } else {
                     
                     let balSet = args.slice(1).join(" ");
@@ -65,8 +65,8 @@ module.exports.run = async (bot, message, args) => {
 
                         message.channel.send({embed:AmtEmb});
 
-                        result.balance = balSet;
-                        result.save().catch(err => console.log(err));
+                        resulteco.balance = balSet;
+                        resulteco.save().catch(err => console.log(err));
                     }
                 }    
             }); 
@@ -74,13 +74,13 @@ module.exports.run = async (bot, message, args) => {
     
         else if (getUser) {
 
-            fBalance.otherUser(Balance, getUser, (result) => {
-                if (!result) {
-                    const newTheirBalance = new Balance({
+            fEconomy.otherUser(Economy, getUser, (resulteco) => {
+                if (!resulteco) {
+                    const newTheirEconomy = new Economy({
                         currId: getUser.id,
                         balance: 0
                     });
-                    newTheirBalance.save().catch(err => console.log(err));
+                    newTheirEconomy.save().catch(err => console.log(err));
                 } else {
                     
                     let balSet = args.slice(1).join(" ");
@@ -114,8 +114,8 @@ module.exports.run = async (bot, message, args) => {
 
                         getUser.send({embed:AdmEmb})
 
-                        result.balance = balSet;
-                        result.save().catch(err => console.log(err));
+                        resulteco.balance = balSet;
+                        resulteco.save().catch(err => console.log(err));
                     }     
                 }
             })

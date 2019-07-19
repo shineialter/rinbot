@@ -15,12 +15,12 @@ module.exports = {
     otherUser: (osu_user, getUser, callback) => {
         osu_user.findOne({
             currId: getUser.id
-        }, (err, res_user) => {
+        }, (err, res_othuser) => {
             if (err) throw err;
-            if (!res_user) {
-                callback(res_user);
+            if (!res_othuser) {
+                callback(res_othuser);
             } else {
-                callback(res_user)
+                callback(res_othuser)
             }
         })
     }

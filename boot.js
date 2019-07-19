@@ -12,19 +12,21 @@ const repcmd = require("./commands/report.js");
 const kcmd = require("./commands/kick.js");
 const bcmd = require("./commands/ban.js");
 const prcmd = require("./commands/prefix.js");
-const currcmd = require("./commands/currency.js");
+const currcmd = require("./commands/economy.js");
 const daibal = require("./commands/dailybal.js");
-const stcmd = require("./commands/stats.js");
+const profcmd = require("./commands/profile.js");
 const gchcmd = require("./commands/gachasim.js");
 const osucmd = require("./commands/osu/osu.js");
 const osusetcmd = require("./commands/osu/osuset.js");
+const osustatscmd = require("./commands/osu/osustats.js");
+const osuqcmd = require("./commands/osu/osuquest.js");
+const osureccmd = require("./commands/osu/osurecent.js");
 
 const admsetbal = require("./adm_cmd/balManager.js");
 const admsetcd = require("./adm_cmd/cdManager.js");
-const test = require("./testing.js");
 
-const Balance = require("./models/balances.js")
-const Exp = require("./models/exps.js");
+const Economy = require("./models/economys.js")
+const fEconomy = require("./commands/utils/fEconomy.js");
 
 const bot = new Discord.Client();
 
@@ -40,6 +42,7 @@ mongoose.connection.on("open", () => {
 })
 
 
+
 // Bot by Shinei#7000
 bot.on("ready", async () => {
     console.log(`${bot.user.username} is ready and online!`);
@@ -47,6 +50,15 @@ bot.on("ready", async () => {
     bot.user.setActivity(`Studying JS || owo`, { type: `PLAYING` });
 });
 
+bot.on("guildMemberAdd", async member => {
+
+    const newEconomy = new Economy({
+        currId: member.user.id,
+        balance: 0,
+        exp: 0,
+        level: 1
+    })
+})
 
 bot.on("message", async message => {
     //let prefixes = JSON.parse(fs.readFileSync("./data/pref.json", "utf8"));
@@ -113,8 +125,8 @@ bot.on("message", async message => {
             currcmd.run(bot, message, args)
         }
     
-        if (command === `stats`) { // need fix
-            stcmd.run(bot, message, args)
+        if (command === `profile`) { // need fix
+            profcmd.run(bot, message, args)
         }
 
         if (command === `gachasimulator` || command === `gachasim` || command === `gsim`) {
@@ -130,6 +142,18 @@ bot.on("message", async message => {
         if (command === `osuset`) {
             osusetcmd.run(bot, message, args)
         }
+
+        if (command === `osustats`) {
+            osustatscmd.run(bot, message, args)
+        }
+
+        if (command === `osuquest`) {
+            osuqcmd.run(bot, message, args)
+        }
+
+        if (command === `osurecent` || command === `recent` || command === `osur`) {
+            osureccmd.run(bot, message, args)
+        }
         
         // --- //
 
@@ -140,19 +164,15 @@ bot.on("message", async message => {
         if (command === `resetcd`) {
             admsetcd.run(bot, message, args)
         }
-
-        // --- //
-
-        if (command === `test`) {
-            test.run(bot, message, args)
-        }
     }
 
     else {
     
     // ooh you found something
-    let rngGet = Math.floor(Math.random() * 10) + 1;
-    let rngGetbal = Math.floor(Math.random() * 10) + 1;
+    let rngGet = Math.floor(Math.random() * 20) + 1;
+    let rngGetbal = Math.floor(Math.random() * 20) + 1;
+
+    let expGet = Math.ceil(Math.random() * 10);
 
     if (rngGet === rngGetbal) {
 
@@ -160,55 +180,32 @@ bot.on("message", async message => {
 
         console.log(message.author.username + " has found ¥" + balGet);
 
-        Balance.findOne({
-            currId: message.author.id
-        }, (err, res) => {
-
-            if (err) throw err;
-            if (!res) {
-
-                const newBalance = new Balance({
+        fEconomy.myself(Economy, message, (resulteco) => {
+            if (!resulteco) {
+                const newEconomy = new Economy({
                     currId: message.author.id,
-                    balance: balGet
+                    balance: balGet,
+                    exp: 0,
+                    level: 1
                 })
-            
-                newBalance.save().catch(err => console.log(err));
-            } else {
-                res.balance = res.balance + balGet;
-                res.save().catch(err => console.log(err));
+
+                newEconomy.save().catch(err => console.log(err));
             }
-        })
-    }
+            
+            else {
 
-    // lebel appu da
-    let expGet = Math.ceil(Math.random() * 17);
+                let curntExp = resulteco.exp;
+                let curntLvl = resulteco.level;
+                let nextLvl = resulteco.level * 53;
 
-    Exp.findOne({
-        currId: message.author.id
-    }, (err, res) => {
-        if (err) throw err;
-        if (!res) {
+                resulteco.exp = curntExp + expGet;
 
-            const newExpStats = new Exp({
-                currId: message.author.id,
-                exp: expGet,
-                level: 1
-            })
+                if (nextLvl <= resulteco.exp) {
 
-            newExpStats.save().catch(err => console.log(err));
-        } else {
-            let curntExp = res.exp;
-            let curntLvl = res.level;
-            let nextLvl = res.level * 53;
+                    resulteco.level = curntLvl + 1;
 
-            res.exp = curntExp + expGet;
-
-                if (nextLvl <= res.exp) {
-
-                    res.level = curntLvl + 1;
-
-                    let prevLvl = res.level - 1;
-                    let resetExp = prevLvl * 53;
+                    let prevLvl = resulteco.level - 1;
+                    let resultecoetExp = prevLvl * 53;
 
                     let lvlUpIcon = message.author.avatarURL
                     let lvlUpEmb = new Discord.RichEmbed()
@@ -217,18 +214,19 @@ bot.on("message", async message => {
                         .addField("Level Up!", `You are now level **${curntLvl + 1}**`);
 
                     message.channel.send({embed:lvlUpEmb})
-                    res.exp = curntExp - resetExp
-                    res.save().catch(err => console.log(err));
-                } else {
-                    res.save().catch(err => console.log(err));
+                    resulteco.exp = curntExp - resultecoetExp
+                    resulteco.save().catch(err => console.log(err));
+                } 
+
+                resulteco.balance = resulteco.balance + balGet;
+                resulteco.save().catch(err => console.log(err));
                 }
-            }
-        })
+            })
+        }
     }  
 });
 
 
 //
-
 
 bot.login(process.env.BOT_TOKEN);

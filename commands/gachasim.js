@@ -1,6 +1,6 @@
 const Discord = require("discord.js");
-const Balance = require("../models/balances.js");
-const fBalance = require("./utils/fBalance.js");
+const Economy = require("../models/economys.js");
+const fEconomy = require("./utils/fEconomy.js");
 const Cooldown = require("../models/cooldowns.js");
 const fCooldown = require("./utils/fCooldown.js");
 const findIdol = require("./utils/findIdol.js");
@@ -69,18 +69,18 @@ module.exports.run = async (bot, message, args) => {
 
                     if (resultgacha.timenow >= resultgacha.cdtime) {
 
-                        fBalance.myself(Balance, message, (resultbal) => {
-                            if (!resultbal) {
-                                const newBalanceUser = new Balance({
+                        fEconomy.myself(Economy, message, (resulteco) => {
+                            if (!resulteco) {
+                                const newEconomyUser = new Economy({
                                     currId: message.author.id,
                                     balance: 0
                                 });
-                            newBalanceUser.save().catch(err => console.log(err));
+                            newEconomyUser.save().catch(err => console.log(err));
                             }
     
-                            else if (resultbal) {
+                            else if (resulteco) {
     
-                                var currentBal = resultbal.balance;
+                                var currentBal = resulteco.balance;
                                 var price = 250 * amtGacha;
     
                                 if (currentBal < price) {
@@ -95,7 +95,7 @@ module.exports.run = async (bot, message, args) => {
                                 }
     
                                 else {
-                                    resultbal.balance = resultbal.balance - price;
+                                    resulteco.balance = resulteco.balance - price;
 
                                     let startGachaEmb = new Discord.RichEmbed()
                                     .setAuthor(`${bot.user.username}`, `${botIcon}`)
@@ -145,7 +145,7 @@ module.exports.run = async (bot, message, args) => {
                                         message.author.send("**Gacha completed!**");
                                     }, gachaTime + 6000)
                                     
-                                    resultbal.save().catch(err => console.log(err));
+                                    resulteco.save().catch(err => console.log(err));
                                 }
 
                                 resultgacha.cdtime = Date.now() + min;

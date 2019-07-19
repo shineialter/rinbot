@@ -1,6 +1,6 @@
 const Discord = require("discord.js");
-const Balance = require("../models/balances.js");
-const fBalance = require("./utils/fBalance.js");
+const Economy = require("../models/economys.js");
+const fEconomy = require("./utils/fEconomy.js");
 const fCooldown = require("./utils/fCooldown.js");
 const Cooldown = require("../models/cooldowns.js");
 
@@ -29,17 +29,17 @@ module.exports.run = async (bot, message, args) => {
                 
                 if (resultdaily.timenow >= resultdaily.cdtime) {
 
-                    fBalance.myself(Balance, message, (resultbal) => {
-                        if (!resultbal) {
-                            const newBalance = new Balance({
+                    fEconomy.myself(Economy, message, (resulteco) => {
+                        if (!resulteco) {
+                            const newEconomy = new Economy({
                                 currId: message.author.id,
                                 balance: 0
                             });
-                            newBalance.save().catch(err => console.log(err));
+                            newEconomy.save().catch(err => console.log(err));
                         } else {
                             
-                            resultbal.balance = resultbal.balance + 250;
-                            
+                            resulteco.balance = result.balance + 250;
+
                             let dBalIcon = message.author.avatarURL
                             let dBalEmb = new Discord.RichEmbed()
                             .setAuthor(`${message.author.username}`, `${dBalIcon}`)
@@ -47,7 +47,7 @@ module.exports.run = async (bot, message, args) => {
                             .addField("Daily Balance", "You have received **¥250**!")
             
                             message.channel.send({embed:dBalEmb});
-                            resultbal.save().catch(err => console.log(err));
+                            resulteco.save().catch(err => console.log(err));
                         }  
                     })
 
@@ -74,57 +74,3 @@ module.exports.run = async (bot, message, args) => {
             } 
         })
     }
-    
-    
-    /*
-    
-    fCooldown.run(Cooldown, message, (result) => {
-        if (!result) {
-            const newCooldownUser = new Cooldown({
-                currId: message.author.id,
-                duration: Date.now()
-            });
-            newCooldownUser.save().catch(err => console.log(err));
-        } 
-        
-        else if (result) {
-            console.log(Date.now())
-
-                let second = 1000;
-                let minute = second * 60;
-                let hour = minute * 60;
-                let day = hour * 24;
-
-                let cd = result.duration + day;
-                result.duration = Date.now()
-
-                if (result.duration < cd) {
-                    message.channel.send("lu udah ngambil daily goblok")
-
-                } else {
-                    console.log("GOO!")
-
-                    fBalance.myself(Balance, message, (result) => {
-                        if (!result) {
-                            const newBalance = new Balance({
-                                currId: message.author.id,
-                                balance: 0
-                            });
-                            newBalance.save().catch(err => console.log(err));
-                        } else {
-            
-                            let dBalIcon = message.author.avatarURL
-                            let dBalEmb = new Discord.RichEmbed()
-                            .setAuthor(`${message.author.usrname}`, `${dBalIcon}`)
-                            .setColor("#f2873f")
-                            .addField("Daily Balance", "You have received **¥100**!")
-            
-                            message.channel.send({embed:dBalEmb});
-                        }  
-                    })
-
-                    result.save().catch(err => console.log(err));
-                }
-            } 
-        })
-    }*/

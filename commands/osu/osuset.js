@@ -5,7 +5,7 @@ const fOsuUser = require("./utils/fOsuUser.js");
 
 module.exports.run = async (bot, message, args) => {
     
-        var osu = new nodeosu.Api(process.env.OSUAPI_TOKEN, {
+        var osu = new nodeosu.Api('fe0518f75e945e284ecda7eda48ba2f7bf64789a', {
             notFoundAsError: true,
             completeScores: false
         });
@@ -53,7 +53,8 @@ module.exports.run = async (bot, message, args) => {
                         if (!res_user) {
                             const setUser = new Osu_User({
                                 currId: message.author.id,
-                                osu_username: osuname
+                                osu_username: osuname,
+                                quest_completed: 0
                             });
     
                             let setUserEmb = new Discord.RichEmbed()

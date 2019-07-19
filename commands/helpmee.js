@@ -11,9 +11,9 @@ module.exports.run = async (bot, message, args) => {
             .setColor("#f2873f")
             .setDescription(`⬞⬞▹ **?help <command>** for more info.`)
             .addField("General", `▹ **botinfo** ▹ binfo\n▹ **serverinfo** ▹ sinfo\n▹ **report**\n▹ **kick**\n▹ **ban**`)
-            .addField("Economy", `▹ **balance** ▹ bal\n▹ **dailybalance** ▹ dailybal ▹ dbal`)
-            .addField("Fun", `▹ **gachasim** ▹ gsim\n`)
-            .addField("osu!", `▹ **osu**\n▹ **osuset**`);
+            .addField("Economy", `▹ **profile**\n▹ **balance** ▹ bal\n▹ **dailybalance** ▹ dailybal ▹ dbal`)
+            .addField("Fun", `▹ **gachasimulator** ▹ gachasim ▹ gsim\n`)
+            .addField("osu!", `▹ **osu**\n▹ **osuset**\n▹ **osuquest**`);
 
         message.channel.send({embed:helplistEmbed});
     }
@@ -76,6 +76,18 @@ module.exports.run = async (bot, message, args) => {
         message.channel.send({embed:helpban});
     }
 
+    else if (args[0] === "profile") {
+
+        let helpbal = new Discord.RichEmbed()
+            .setAuthor(`Profile Command`, `${botIcon}`)
+            .setColor("#f2873f")
+            .setDescription(`⬞⬞▹ **?profile** <@tag user>`)
+            .addField("Function", `▹ Shows your profile. Tag a user to show theirs.`)
+            .addField("Example", '▹ ?profile `@Shinei`');
+
+        message.channel.send({embed:helpbal});
+    }
+
     else if (args[0] === "bal" || args[0] === "balance") {
 
         let helpbal = new Discord.RichEmbed()
@@ -105,7 +117,7 @@ module.exports.run = async (bot, message, args) => {
             .setAuthor(`Gacha Simulator Command`, `${botIcon}`)
             .setColor("#f2873f")
             .setDescription(`⬞⬞▹ **?gachasimulator** <gacha type> <amount>`)
-            .addField("Function", `▹ Plays a gacha simulator to test your luck in gacha owo.\n\n**[more settings]**\n▹ **types** - List all gacha types.`)
+            .addField("Function", `▹ Plays a gacha simulator to test your luck in gacha owo. \n\n**Warning!** \nCurrently this is only a simulator, you won't get any rewards!\n\n**[more settings]**\n▹ **types** - List all gacha types.`)
             .addField("Example", `▹ ?gachasimulator imas 10\n\n**[aliases]**\n▹ gachasim ▹ gsim`);
 
         message.channel.send({embed:helpgsim});
@@ -129,8 +141,20 @@ module.exports.run = async (bot, message, args) => {
             .setAuthor(`osu! Set Command`, `${botIcon}`)
             .setColor("#f2873f")
             .setDescription(`⬞⬞▹ **?osuset** <type> <username>`)
-            .addField("Function", `▹ Define some osu! user settings to your discord account.\n\n**[more settings]**\n▹ **user** - Link an osu! Standard profile to your discord account.`)
-            .addField("Example", '▹ ?osuset `user` `shinei`');
+            .addField("Function", `▹ Define some osu! user settings to your discord account.\n\n**[more settings]**\n▹ **user** - Link an osu! Standard profile to your discord account. Use " for spaced username.`)
+            .addField("Example", '▹ ?osuset `user` `shinei` ⬞ ?osuset `user` `"My aim sucks"`');
+
+        message.channel.send({embed:helpban});
+    }
+
+    else if (args[0] === "osuquest") {
+
+        let helpban = new Discord.RichEmbed()
+            .setAuthor(`osu! Quest Command`, `${botIcon}`)
+            .setColor("#f2873f")
+            .setDescription(`⬞⬞▹ **?osuquest** <difficulty>`)
+            .addField("Function", `▹ Do a random beatmap with challanges.\n\n**[more settings]**\n▹ **easy** - Get an easy quest.\n▹ **hard** - Get a hard quest.\n▹ **turnin / ti** - Turn in a quest.\n▹ **abandon** - Abandon your current quest.`)
+            .addField("Example", '▹ ?osuquest `easy`');
 
         message.channel.send({embed:helpban});
     }

@@ -22,7 +22,7 @@ module.exports.run = async (bot, message, args) => {
             return;
         }
 
-        else if (args[0] === "dailybal" || args[0] === `dbal`) {
+        else if (args[0] == "dailybal") {
 
             let getUserArgs = args.slice(1).join(" ");
             let getUser = message.guild.member(message.mentions.users.first() || message.guild.members.get(getUserArgs));
@@ -40,7 +40,7 @@ module.exports.run = async (bot, message, args) => {
 
             else if (getUser) {
 
-                fCooldown.dailybal(Cooldown, message, (resultdaily) => {
+                fCooldown.dailybal(Cooldown, message, (result) => {
                     if (!result) {
 
                         const newCooldownUser = new Cooldown({
@@ -62,8 +62,8 @@ module.exports.run = async (bot, message, args) => {
 
                         message.channel.send({embed:cdEmb});
 
-                        resultdaily.cdtime = Date.now()
-                        resultdaily.save().catch(err => console.log(err));
+                        result.cdtime = Date.now()
+                        result.save().catch(err => console.log(err));
                     }
                 })
             }      

@@ -39,5 +39,19 @@ module.exports = {
                 callback(resultgacha)
             }
         })
-    }
+    },
+
+    osuabandonq: (cooldown, message, callback) => {
+        cooldown.findOne({
+            currId: message.author.id,
+            command: "osuquest abandon"
+        }, (err, resultabandon) => {
+            if (err) throw err;
+            if (!resultabandon) {
+                callback(resultabandon);
+            } else {
+                callback(resultabandon)
+            }
+        })
+    },
 }
