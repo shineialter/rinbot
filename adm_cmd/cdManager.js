@@ -61,7 +61,8 @@ module.exports.run = async (bot, message, args) => {
                         .addField("Cooldown Reset!", `You have reset ${getUser.toString()}'s **daily balance** cooldown!`);
 
                         message.channel.send({embed:cdEmb});
-
+    
+                        result.timenow = Date.now()
                         result.cdtime = Date.now()
                         result.save().catch(err => console.log(err));
                     }
