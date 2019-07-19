@@ -153,7 +153,7 @@ module.exports.run = async (bot, message, args) => {
             .setAuthor(`osu! Quest Command`, `${botIcon}`)
             .setColor("#f2873f")
             .setDescription(`⬞⬞▹ **?osuquest** <difficulty>`)
-            .addField("Function", `▹ Do a random beatmap with challanges.\n\n**[more settings]**\n▹ **easy** - Get an easy quest.\n▹ **hard** - Get a hard quest.\n▹ **turnin / ti** - Turn in a quest.\n▹ **abandon** - Abandon your current quest.`)
+            .addField("Function", `▹ Do a random beatmap with challanges.\n\n**[more settings]**\n▹ **easy** - Get an easy quest.\n▹ **medium** - Get a medium quest.\n▹ **hard** - Get a hard quest.\n▹ **turnin / ti** - Turn in a quest.\n▹ **abandon** - Abandon your current quest.`)
             .addField("Example", '▹ ?osuquest `easy`');
 
         message.channel.send({embed:helpban});
