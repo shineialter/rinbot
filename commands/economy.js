@@ -55,7 +55,7 @@ module.exports.run = async (bot, message, args) => {
             let balTheirEmbed = new Discord.RichEmbed()
                 .setAuthor(`${getUser.user.username}`, `${balTheirIcon}`)
                 .setColor("#f2873f")
-                .addField(`${getUser.user.username}'s Balance`, `¥${resultecoo.balance}`);
+                .addField(`${getUser.user.username}'s Balance`, `¥${resulteco.balance}`);
 
                 message.channel.send({embed:balTheirEmbed});
             }
