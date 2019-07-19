@@ -751,6 +751,16 @@ module.exports.run = async (bot, message, args) => {
                                                 if (err) console.log(err)
                                                 })
                                             }
+                                            
+                                            else {
+
+                                            let noqaEmb = new Discord.RichEmbed()
+                                                .setAuthor(`Invalid arguments.`, `${osuIcon}`)
+                                                .setColor("#f2873f");
+
+                                            message.channel.send({embed:noqaEmb})
+                                        }
+                                            
                                         }).catch(err => {
                                             let noqwEmb = new Discord.RichEmbed()
                                                 .setAuthor(`You didn't answer..`, `${osuIcon}`)
