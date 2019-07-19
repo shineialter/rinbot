@@ -40,7 +40,7 @@ module.exports.run = async (bot, message, args) => {
                             newEconomy.save().catch(err => console.log(err));
                         } else {
                             
-                            resulteco.balance = result.balance + 250;
+                            resulteco.balance = resulteco.balance + 250;
 
                             let dBalIcon = message.author.avatarURL
                             let dBalEmb = new Discord.RichEmbed()
