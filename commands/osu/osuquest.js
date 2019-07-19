@@ -9,6 +9,7 @@ const Osu_Quest = require("./models/osu_quests.js");
 const Osu_Standard_Beatmaps = require("./models/osu_standard_beatmaps.js");
 const fStdBm = require("./utils/fStdBm.js");
 const fCooldown = require("../utils/fCooldown.js");
+const Cooldown = require("../../models/cooldowns.js");
 
 module.exports.run = async (bot, message, args) => {
 
