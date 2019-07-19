@@ -437,11 +437,15 @@ module.exports.run = async (bot, message, args) => {
 
                                         for (let i = 0; i < checkPlayerRec.length; i++) {
 
-                                            console.log(checkPlayerRec[i].perfect, questFC)
                                             if (checkPlayerRec[i].beatmapId == questMap_id && checkPlayerRec[i].raw_mods == questmods && `${checkPlayerRec[i].perfect}` == questFC && checkPlayerRec[i].rank !== "F") {
 
                                                 theMap = checkPlayerRec[i];
                                                 console.log("yes") // soo this exist if one of ur plays match the criteria.
+                                            }
+
+                                            else if (checkPlayerRec[i].beatmapId == questMap_id && checkPlayerRec[i].raw_mods == questmods && checkPlayerRec[i].rank !== "F") {
+                                                
+                                                theMap = checkPlayerRec[i];
                                             }
                                         }
                                         console.log(theMap)
