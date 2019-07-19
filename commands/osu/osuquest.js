@@ -13,7 +13,7 @@ const Cooldown = require("../../models/cooldowns.js");
 
 module.exports.run = async (bot, message, args) => {
 
-    var osu = new nodeosu.Api(process.env.OSUAPI_TOKEN, {
+    var osu = new nodeosu.Api('fe0518f75e945e284ecda7eda48ba2f7bf64789a', {
         notFoundAsError: true,
         completeScores: false
     });
@@ -206,6 +206,172 @@ module.exports.run = async (bot, message, args) => {
                            })
                         }
                     })      
+                }
+
+                else if (diffChoice === `medium`) {
+
+                    fQuest.myself(Osu_Quest, message, async (res_quest) => {
+
+                        if (res_quest) {
+
+                            let haveQEmb = new Discord.RichEmbed()
+                                .setAuthor(`You already have a quest ongoing!`, `${osuIcon}`)
+                                .setColor("#f2873f");
+
+                            message.channel.send({embed:haveQEmb})
+                        }
+
+                        else if (!res_quest) {
+
+                            fStdBm.questmedium(Osu_Standard_Beatmaps, message, async (res_map) => {
+                                if(!res_map) {
+       
+                                    console.log("no maps atm");
+                                }
+       
+                                else if (res_map) {
+       
+                                    let chosenMap = res_map[Math.floor(Math.random() * res_map.length)];
+
+                                    let fullcombo = ""
+                                    let qfc = ""
+                                    let qpass = ""
+                                    let mods = ""
+                                    let mapstatus = ""
+                                    let mapgamemode = ""
+                                    let mapapproveid = chosenMap.approved;
+                                    let mapartist = chosenMap.artist;
+                                    let map_id = chosenMap.beatmap_id;
+                                    let mapset_id = chosenMap.beatmapset_id;
+                                    let mapbpm = chosenMap.bpm;
+                                    let mapcreator = chosenMap.creator;
+                                    let mapmode = chosenMap.mode;
+                                    let mapstar = chosenMap.difficultyrating;
+                                    let mapCS = chosenMap.diff_size;
+                                    let mapOD = chosenMap.diff_overall;
+                                    let mapAR = chosenMap.diff_approach;
+                                    let mapHP = chosenMap.diff_drain;
+                                    let maplength = chosenMap.total_length;
+                                    let maptitle = chosenMap.title;
+                                    let mapdiffname = chosenMap.version;
+                                    let mapfavorite = chosenMap.favourite_count;
+                                    let mapmax_combo = chosenMap.max_combo;
+
+                                    //FC or not?
+                                    let fcnum = [0, 0, 0, 1, 1, 1];
+                                    var fullcombostr = fcnum[Math.floor(Math.random() * fcnum.length)];
+
+                                    //With mods?
+                                    let modsnum = [0, 0, 0, 0, 0, 8, 8, 16];
+                                    var modsstr = modsnum[Math.floor(Math.random() * modsnum.length)];
+
+                                    let minute = Math.floor(maplength / 60);
+                                    let seconds = maplength % 60; 
+                                    
+                                    if (seconds < 10) {
+                                        var fixedseconds = `0${seconds}`;
+                                    } else {
+                                        fixedseconds = seconds;
+                                    }
+
+                                    let length = `${minute}:${fixedseconds}`
+
+                                    //reward
+                                    let qreward = Math.ceil(Math.random() * 50) + 60;
+
+                                    //exp
+                                    let qexp = Math.ceil(Math.random() * 50) + 20;
+
+                                    if (mapapproveid === 1) {
+                                        mapstatus = "Ranked";
+
+                                    } else if (mapapproveid === 4) {
+                                        mapstatus = "Loved";
+                                    }
+
+                                    if (mapmode === 0) {
+                                        mapgamemode = "osu";
+                                    }
+
+                                    if (fullcombostr === 1) {
+                                        qfc = "Full combo"
+                                        fullcombo = true;
+                                        qpass = 0;
+                                        qexp = qexp + 40;
+                                        qreward = qreward + 75;
+
+                                    } else if (fullcombostr === 0) {
+                                        qfc = "Pass"
+                                        fullcombo = false;
+                                        qpass = maplength;
+                                    }
+
+                                    if (modsstr === 0) {
+                                        mods = "**no mod**";
+
+                                    } else if (modsstr === 8) {
+                                        mods = "with **HD**";
+                                        qexp = qexp + 15;
+                                        qreward = qreward + 43;
+
+                                    } else if (modsstr === 16) {
+                                        mods = "with **HR**";
+                                        qexp = qexp + 50;
+                                        qreward = qreward + 86;
+                                    }
+
+                                    let maplink = `https://osu.ppy.sh/beatmapsets/${mapset_id}#${mapgamemode}/${map_id}`
+
+                                    let QuestEmb = new Discord.RichEmbed()
+                                        .setAuthor(`${mapartist} - ${maptitle} [${mapdiffname}] by ${mapcreator}`, `${osuIcon}`, maplink)
+                                        .setColor("#f2873f")
+                                        .setDescription(`\n**Quest** ▹ **${qfc}** this map ${mods}!\n**Reward** ▹ **¥${qreward}** + **${qexp}xp**\n\n**Download:** [map](https://osu.ppy.sh./d/${map_id}) ⬞ [no video](https://osu.ppy.sh./d/${map_id}n) ⬞ [direct](https://bloodcat.com/osu/s/${map_id})\n`)
+                                        .setThumbnail(`https://b.ppy.sh/thumb/${mapset_id}l.jpg`)
+                                        .addField(`Map Details`, `**Length:** ${length} ⬞ **BPM:** ${mapbpm}\n**Stars:** ☆${Number(mapstar).toFixed(2)} ⬞ **Max Combo:** x${mapmax_combo}\n\n**CS:** ${mapCS} ⬞ **AR:** ${mapAR} ⬞ **OD:** ${mapOD} ⬞ **HP:** ${mapHP}`)
+                                        .setFooter(`▹ ${mapstatus} ▹ ♥ ${mapfavorite} ▹ Quest for ${message.author.username}`);
+
+                                    message.channel.send({embed:QuestEmb});
+
+                                    const newQuest = new Osu_Quest({
+                                        currId: message.author.id,
+                                        difficultychoice: diffChoice,
+                                        fc: qfc,
+                                        fullcombo: fullcombo,
+                                        pass: qpass,
+                                        acc: 0,
+                                        mods: modsstr,
+                                        reward: qreward,
+                                        exp: qexp,
+                                        belowherearetoshowthequest: 0,
+                                        artist: mapartist,
+                                        link: maplink,
+                                        title: maptitle,
+                                        diffname: mapdiffname,
+                                        creator: mapcreator,
+                                        fullcombo: fullcombo,
+                                        modsnum: modsstr,
+                                        mods: mods,
+                                        reward: qreward,
+                                        map_id: map_id,
+                                        mapset_id: mapset_id,
+                                        lengthnum: maplength,
+                                        length: length,
+                                        bpm: mapbpm,
+                                        star: mapstar,
+                                        max_combo: mapmax_combo,
+                                        CS: mapCS,
+                                        AR: mapAR,
+                                        OD: mapOD,
+                                        HP: mapHP,
+                                        status: mapstatus,
+                                        favorite: mapfavorite
+                                    })
+
+                                    newQuest.save().catch(err => console.log(err));
+                                }
+                           })
+                        }
+                    })
                 }
 
                 else if (diffChoice === `hard`) {
@@ -415,7 +581,11 @@ module.exports.run = async (bot, message, args) => {
                                         diff = "an easy"
                                     } 
 
-                                    else {
+                                    else if (questdiff === `medium`) {
+
+                                        diff = "a medium"
+
+                                    } else {
 
                                         diff = "a hard"
                                     }
@@ -439,16 +609,15 @@ module.exports.run = async (bot, message, args) => {
 
                                             if (checkPlayerRec[i].beatmapId == questMap_id && checkPlayerRec[i].raw_mods == questmods && `${checkPlayerRec[i].perfect}` == questFC && checkPlayerRec[i].rank !== "F") {
 
-                                                theMap = checkPlayerRec[i];
-                                                console.log("yes") // soo this exist if one of ur plays match the criteria.
+                                                theMap = checkPlayerRec[i]; // soo this exist if one of ur plays match the criteria.
                                             }
 
                                             else if (checkPlayerRec[i].beatmapId == questMap_id && checkPlayerRec[i].raw_mods == questmods && checkPlayerRec[i].rank !== "F") {
-                                                
+
                                                 theMap = checkPlayerRec[i];
                                             }
                                         }
-                                        console.log(theMap)
+
                                         if (!theMap) { // this if the script didn't found any play that fullfil the critera
 
                                             let noPlaysEmb = new Discord.RichEmbed()
