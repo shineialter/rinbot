@@ -18,9 +18,7 @@ const profcmd = require("./commands/profile.js");
 const gchcmd = require("./commands/gachasim.js");
 const osucmd = require("./commands/osu/osu.js");
 const osusetcmd = require("./commands/osu/osuset.js");
-const osustatscmd = require("./commands/osu/osustats.js");
 const osuqcmd = require("./commands/osu/osuquest.js");
-const osureccmd = require("./commands/osu/osurecent.js");
 
 const admsetbal = require("./adm_cmd/balManager.js");
 const admsetcd = require("./adm_cmd/cdManager.js");
@@ -143,16 +141,8 @@ bot.on("message", async message => {
             osusetcmd.run(bot, message, args)
         }
 
-        if (command === `osustats`) {
-            osustatscmd.run(bot, message, args)
-        }
-
         if (command === `osuquest`) {
             osuqcmd.run(bot, message, args)
-        }
-
-        if (command === `osurecent` || command === `recent` || command === `osur`) {
-            osureccmd.run(bot, message, args)
         }
         
         // --- //
