@@ -33,7 +33,9 @@ module.exports.run = async (bot, message, args) => {
                         if (!resulteco) {
                             const newEconomy = new Economy({
                                 currId: message.author.id,
-                                balance: 0
+                                balance: 0,
+                                exp: 0,
+                                level: 1
                             });
                             newEconomy.save().catch(err => console.log(err));
                         } else {
