@@ -637,7 +637,7 @@ module.exports.run = async (bot, message, args) => {
                                                         currId: message.author.id,
                                                         balance: questreward,
                                                         exp: questexp,
-                                                        level: 0
+                                                        level: 1
                                                     })
 
                                                     resulteco.balance = resulteco.balance + questreward;
