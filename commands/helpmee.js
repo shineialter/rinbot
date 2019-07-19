@@ -13,7 +13,8 @@ module.exports.run = async (bot, message, args) => {
             .addField("General", `▹ **botinfo** ▹ binfo\n▹ **serverinfo** ▹ sinfo\n▹ **report**\n▹ **kick**\n▹ **ban**`)
             .addField("Economy", `▹ **profile**\n▹ **balance** ▹ bal\n▹ **dailybalance** ▹ dailybal ▹ dbal`)
             .addField("Fun", `▹ **gachasimulator** ▹ gachasim ▹ gsim\n`)
-            .addField("osu!", `▹ **osu**\n▹ **osuset**\n▹ **osuquest**`);
+            .addField("osu!", `▹ **osu**\n▹ **osuset**\n▹ **osuquest**`)
+            .setFooter("Join Rin's server for updates! discord.gg/gUvN75c");;
 
         message.channel.send({embed:helplistEmbed});
     }
